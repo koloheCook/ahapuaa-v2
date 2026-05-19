@@ -274,3 +274,72 @@ are already in src/game/, and TILE_SCALE is already in the codebase.
 Run SPRINT_2_SETUP.md in a new chat to initialize git, push to GitHub, and confirm
 the project is ready for Sprint 2. Then paste SPRINT_2_PROMPT.md (written after P3
 Sprint 2 spec is extracted) as the opening of a new Sprint 2 session.
+
+---
+
+## 2026-05-19 - Sprint 2 Setup Session (Sonnet 4.6)
+
+### What was done this session (no game code changes)
+
+1. **Step 1 - Project state verified:**
+   - Phaser version: 4.1.0 confirmed
+   - `npm run build`: 12 modules, no errors
+   - `npm run dev`: ready in 217ms on port 5174 (5173 in use)
+   - All pass.
+
+2. **Step 2 - Sprint 1 file integrity confirmed:**
+   - `grep -r "from 'phaser'" src/game/` returned empty (architectural boundary clean)
+   - All 8 required files exist: HexGrid.js, gameState.js, constants.js, hydrology.js,
+     worldGen.js, PreloadScene.js, GameScene.js, public/maps/ahupuaa.json
+   - `ahupuaa.json` staggerindex: "odd" confirmed
+
+3. **Step 3 - Git initialized and pushed:**
+   - `.gitignore` created (node_modules/, dist/, .DS_Store, *.local)
+   - `git init` run; 31 files staged by name; node_modules/ and dist/ confirmed absent
+   - First commit: "Sprint 1 complete: Phaser 4.1.0 hex tilemap, all terrain types rendering"
+   - GitHub push: blocked in Claude Code session -- `gh` alias routes through
+     `op plugin run -- gh` which requires interactive IO (not available in non-interactive
+     shell). User completed push directly in terminal.
+   - GitHub repo: koloheCook/ahapuaa-v2 (public)
+
+4. **Step 4 - DEVLOG convention confirmed:**
+   - Observation logging format present in 2026-05-19 Planning Session entry. CONFIRMED.
+
+5. **Step 5 - Pre-Sprint 2 inventory:**
+
+   | Item | Status |
+   |---|---|
+   | `src/game/buildings.js` | missing (Sprint 2 will port from prototype) |
+   | `src/game/hydrology.js` | exists (ported in Sprint 1) |
+   | `src/scenes/GameScene.js` | Sprint 1 state -- no camera, no input, no HUD |
+   | `index.html` | minimal Phaser host, no HUD markup yet |
+   | `SPRINT_2_PROMPT.md` | exists -- ahead of schedule, ready to use |
+
+### Observed blocker: gh / 1Password CLI non-interactive failure
+
+**Expected:** `/opt/homebrew/bin/gh repo create ...` works in Claude Code bash.
+**Actual:** `gh` alias (`op plugin run -- gh`) requires interactive IO; fails with
+  "[ERROR] interactive IO not available". Even the raw binary has no credentials
+  without op injection.
+**Classification:** environment-configuration (not a Phaser issue)
+**Fix applied:** none this session. Fix prompt written (see below).
+**P3 parity:** same-as-P3 (both repos affected equally)
+
+A fix prompt was written covering:
+- Wrapper script `~/.claude/bin/gh-claude` using `op read` (Touch ID, no TTY needed)
+- Directory allowlist scoped to Pioneer Species Projects path
+- Update to `check-gh-path.sh` to point Claude to the wrapper
+- PATH update in `~/.claude/settings.json`
+
+### Open decisions / blockers for Sprint 2
+
+- None that block Sprint 2 game code. The gh/op issue only affects repo operations,
+  not local dev.
+- The fix prompt for gh-claude wrapper should be run in a separate session before
+  the next time a gh operation is needed from Claude Code.
+
+### Next session goal
+
+Open a new chat, paste SPRINT_2_PROMPT.md as the opening message, and execute
+Sprint 2: camera pan/zoom, buildings.js port, building placement, resource HUD,
+End Turn wired to processTick.
