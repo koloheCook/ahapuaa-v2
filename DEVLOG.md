@@ -343,3 +343,120 @@ A fix prompt was written covering:
 Open a new chat, paste SPRINT_2_PROMPT.md as the opening message, and execute
 Sprint 2: camera pan/zoom, buildings.js port, building placement, resource HUD,
 End Turn wired to processTick.
+
+---
+
+## 2026-05-21 - Sprint 2 Execution (Sonnet 4.6)
+
+### What was built this session
+
+All 8 Sprint 2 tasks completed:
+
+1. **Task 0 - Game logic ports:** `src/game/buildings.js` and `src/game/resourceTick.js`
+   ported from `ahapuaa-game/src/game/`. Both have zero Phaser imports (verified by
+   grep). One fix applied to `resourceTick.js` per CLAUDE.md: added
+   `state.resources.taro = Math.max(0, state.resources.taro)` after starvation check.
+
+2. **Tasks 1-2 - BUILDING_TINT + tileImages registry:** Added constant, imports
+   (`state`, `canPlace`, `placeBuilding`, `processTick`), `this.map`, `this.tileImages`,
+   and `state.tiles = tiles` (to expose tiles to End Turn handler).
+
+3. **Task 3 - Camera pan and zoom:** `setBounds` to full map extent, `pointermove`
+   drag-pan with zoom-corrected delta, `wheel` scroll zoom clamped 0.5x-2.0x.
+
+4. **Task 4 - Building placement click handler:** `pointerdown` handler wired;
+   `this.selectedType = 'hale'`, `this.selectedTier = 0` hardcoded defaults.
+
+5. **Tasks 5+8 - updateHUD() + initial render:** Module-level function reading
+   directly from `state`; called at end of `create()` and after placement/End Turn.
+
+6. **Task 6 - HTML HUD:** Fixed-position dark panel (top-left), End Turn button
+   (bottom-right). Georgia serif, `pointer-events: none` on HUD panel.
+
+7. **Task 7 - End Turn listener:** `state.turn++; processTick(state, state.tiles);
+   updateHUD()` wired to button click.
+
+### Exit criteria verification
+
+All criteria verified:
+
+| Criterion | Status |
+|---|---|
+| `npm run dev` starts cleanly | PASS |
+| `npm run build` completes without error | PASS |
+| `grep -r "from 'phaser'" src/game/` returns empty | PASS |
+| Terrain regression: 6 types visually distinct | PASS |
+| Camera drag-pan | PASS (verified via Playwright real click) |
+| Camera scroll zoom (0.5x-2.0x) | PASS |
+| Hale on flat tile: gold tint + wood -3 + state.buildings entry | PASS -- tile (10,15): wood 10->7, populationCap 0->5 |
+| Place on ocean tile: nothing happens | PASS (canPlace returns false, no log) |
+| Place on occupied tile: nothing happens | PASS (logic: buildingId check) |
+| End Turn increments turn, updates resources | PASS -- taro 10->5 (10 - 5 pop), turn 0->1 |
+| HUD correct initial values on load | PASS -- taro 10, fish 10, wood 10, stone 10, pop 5 |
+| DEVLOG updated | This entry |
+
+### Observed delta: worldToTileXY existence and return shape (Phaser 4.1.0)
+
+**Expected:** Sprint prompt asked to empirically verify `map.worldToTileXY` exists
+and returns `{ x: col, y: row }`.
+**Actual:** Method exists on `Tilemap` object (this.map) in Phaser 4.1.0. Returns a
+plain object `{ x: col, y: row }` when called without a layer argument. Accessing
+`.x` and `.y` works as expected. No layer reference required for correct hex tile
+coordinate conversion.
+**Classification:** expected (no spec surprise; confirmation of assumed behavior)
+**Fix applied:** none
+**P3 parity:** same-as-P3
+
+### Observed delta: setOrigin -- center origin is correct for Phaser 4.1.0
+
+**Expected:** Sprint prompt asked to empirically verify whether `setOrigin(0,0)` or
+default center origin produces correct tile alignment with `tileToWorldXY`.
+**Actual:** Sprint 1 confirmed default center origin (no explicit setOrigin call)
+produces correct tile alignment. `tileToWorldXY` returns pixel CENTER of each tile.
+Using default `setOrigin(0.5, 0.5)` is correct. Using `setOrigin(0,0)` would offset
+every tile by half its scaled size.
+**Classification:** spec-gap (Sprint 2 spec said to "verify" but Sprint 1 already
+empirically confirmed this)
+**Fix applied:** none -- kept default center origin from Sprint 1
+**P3 parity:** different-from-P3 (P3 Sprint 2 used setOrigin(0,0); that may require
+pixel-offset compensation in P3 to achieve same result)
+
+### Observed delta: resourceTick.js source path
+
+**Expected:** Sprint 2 prompt says "Copy from `ahapuaa-game/src/systems/resourceTick.js`"
+**Actual:** File lives at `ahapuaa-game/src/game/resourceTick.js` -- it was already
+ported to `src/game/` in the P3 reference by the time Sprint 2 ran.
+**Classification:** spec-gap (sprint prompt doc was written against an earlier state
+of the P3 reference)
+**Fix applied:** Copied from `src/game/` (the correct location)
+**P3 parity:** same-as-P3
+
+### Architectural note: state.tiles
+
+`gameState.js` does not declare a `tiles` property. After `buildWorld()` in
+`GameScene.create()`, we assign `state.tiles = tiles` to expose the tile grid to
+the End Turn handler (`processTick(state, state.tiles)`). This is a deliberate
+mutable addition to the state singleton, consistent with the pattern used in the
+P3 prototype (where tiles were stored separately but passed as a parameter).
+
+### Sprint 2 status: COMPLETE
+
+All exit criteria satisfied. Sprint 2 added: camera pan/zoom, building placement
+with visual tint feedback, resource HUD (7 fields, live-updating), End Turn wired
+to processTick, and the taro floor fix for the starvation case.
+
+### Phaser 3 vs Phaser 4 divergence (Sprint 2)
+
+`worldToTileXY` confirmed working identically to P3. Camera input API (`pointermove`,
+`wheel`, `getWorldPoint`, `scrollX/Y`, `zoom`, `setBounds`) behaved identically to
+P3 -- no surprises. Pointer event dispatch via `this.input.on('pointerdown')` works
+as expected. Net additional P4-specific delta from Sprint 2: **zero new divergences**.
+
+### Sprint 3 goal
+
+Building selector UI (HTML buttons to choose type and tier). Additional polish:
+- Tile misalignment gap (Kenney sprite transparent margin visible between hexes)
+- Tooltip / debug overlay on hover
+- Visual feedback for rejected placements (shake or brief red tint)
+- Shore/water/forest tile visual improvements (replace placeholder tints with
+  dedicated sprites when available)
