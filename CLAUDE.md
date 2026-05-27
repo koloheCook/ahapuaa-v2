@@ -9,8 +9,10 @@ Ahupuaa: The Living Land is a browser-based strategy simulation of Hawaiian land
 stewardship. Players manage a mountain-to-sea land division, balancing resources,
 population, and cultural ike through traditional agriculture and aquaculture.
 Water is the primary carrier of value. This is a Phaser 4 rebuild of a working
-Vanilla JS prototype. Demo day is Monday, May 19, 2026 at 5:00 PM PST. Every
-session must be scoped to ship something visible by that deadline.
+Vanilla JS prototype. Primary build going forward (ahupuaa-game Phaser 3 prototype
+paused 2026-05-25 -- see that repo's README for context).
+
+**Last shipped:** 2026-05-26 - post-bootcamp triage, Sprint 2 committed, pivot to v2 as primary confirmed
 
 ---
 

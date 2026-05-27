@@ -1,5 +1,57 @@
 # DEVLOG - Ahupuaa v2 (Phaser 4 Rebuild)
 
+## 2026-05-26 - Post-bootcamp triage, direction confirmed (Sonnet 4.6)
+
+### What was done
+
+1. **Direction confirmed:** ahupuaa-v2 (Phaser 4) is the primary build going forward.
+   ahupuaa-game (Phaser 3 prototype) is paused. See ahupuaa-game README for full context
+   and state-at-pause inventory.
+
+2. **Sprint 2 committed:** Sprint 2 implementation (camera pan/zoom, building placement,
+   resource HUD, End Turn wired to processTick) was sitting uncommitted from the 2026-05-21
+   session. Staged and pushed: DEVLOG.md, index.html, GameScene.js, buildings.js,
+   resourceTick.js. Commit: ba5c471.
+
+3. **CLAUDE.md triage:** Stale content identified:
+   - Demo deadline (May 19) and "Current Sprint" Sprint 1 block are now out of date.
+   - "What Carries Forward" section describes completed work.
+   - "Do Not Build" list references Sprint 3 as a future checkpoint with no defined scope.
+   - Added `Last shipped:` line to bring CLAUDE.md into standard format.
+   - Full CLAUDE.md rewrite deferred to a dedicated session -- scope is too large for
+     a triage close.
+
+4. **session-close skill standardized:** Rewritten to be project-agnostic. Key changes:
+   - Step 0.5: multi-repo workspace scan removed; single-repo stray-file check with
+     noise filter added.
+   - Step 3: dual-branch (logbook vs. sprint-log) replaced with format auto-detection
+     from DEVLOG.md first 15 lines.
+   - Malama docs/dev.logbook archived; DEVLOG.md created at project root.
+
+### Decisions made
+
+- ahupuaa-v2 is the canonical build. All future sprint work happens here.
+- ahupuaa-game is preserved as a reference prototype, not deleted.
+- Standard doc structure across all Pioneer Species projects: CLAUDE.md + DEVLOG.md +
+  README.md. docs/architecture.md only where schema complexity warrants it (Malama only
+  at this time).
+
+### Open questions
+
+- CLAUDE.md "Current Sprint" section is stale (still describes Sprint 1 done criteria).
+  Sprint 3 has no written spec. Recommend: dedicate one session to rewriting CLAUDE.md
+  for the post-bootcamp phase before starting Sprint 3.
+- Heiau asset still blocked (no culturally appropriate replacement identified).
+- Shore/water/forest tiles still placeholder tints.
+
+### Next session goal
+
+Rewrite CLAUDE.md "Current Sprint" section to reflect Sprint 2 complete, define Sprint 3
+scope (building selector UI, tile gap polish, hover tooltip), and remove the stale demo
+deadline language. Then begin Sprint 3.
+
+---
+
 ## 2026-05-18 - Pre-Sprint Scaffold (Opus 4.7)
 
 ### Context
