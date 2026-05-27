@@ -1,0 +1,38 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-05-27T04:42:08Z",
+  "phase": null,
+  "phase_name": "Sprint 3 prep",
+  "phase_dir": null,
+  "plan": null,
+  "task": null,
+  "total_tasks": null,
+  "status": "paused",
+  "completed_tasks": [
+    {"id": 1, "name": "Sprint 1 - Phaser 4 hex tilemap rendering", "status": "done", "commit": "87a5fe7"},
+    {"id": 2, "name": "Sprint 2 - Camera, building placement, resource HUD, End Turn", "status": "done", "commit": "ba5c471"},
+    {"id": 3, "name": "Post-bootcamp triage - direction confirmed, Sprint 2 committed", "status": "done", "commit": "08772f8"}
+  ],
+  "remaining_tasks": [
+    {"id": 4, "name": "Rewrite CLAUDE.md Current Sprint section for post-bootcamp phase", "status": "not_started"},
+    {"id": 5, "name": "Define Sprint 3 scope doc (building selector UI, tile polish, hover tooltip)", "status": "not_started"},
+    {"id": 6, "name": "Sprint 3 execution", "status": "not_started"}
+  ],
+  "blockers": [],
+  "human_actions_pending": [
+    {"action": "Push .claude/launch.json to GitHub if desired (created this session for preview server config)", "context": "Untracked file; gitignore doesn't cover it. Not blocking.", "blocking": false}
+  ],
+  "decisions": [
+    {"decision": "ahupuaa-v2 (Phaser 4) is canonical build going forward", "rationale": "Post-bootcamp triage confirmed this; ahupuaa-game prototype preserved as reference", "phase": "triage"},
+    {"decision": "state.tiles assigned on state singleton after buildWorld()", "rationale": "End Turn handler needs tiles; cleanest approach without restructuring state shape", "phase": "sprint-2"},
+    {"decision": "Default center origin (setOrigin 0.5, 0.5) kept for tile images", "rationale": "tileToWorldXY returns pixel center; center origin is empirically correct for Phaser 4", "phase": "sprint-2"},
+    {"decision": "worldToTileXY confirmed unchanged in Phaser 4.1.0 - returns {x: col, y: row}", "rationale": "Empirically verified during Sprint 2 debugging", "phase": "sprint-2"}
+  ],
+  "uncommitted_files": [
+    ".claude/launch.json (new - dev server config for preview tool)",
+    ".playwright-mcp/ (playwright test artifacts - should be gitignored)",
+    ".vite/ (vite cache - should be gitignored)"
+  ],
+  "next_action": "Rewrite CLAUDE.md 'Current Sprint' section to reflect Sprint 2 complete and define Sprint 3 scope (building selector UI, tile gap polish, hover tooltip). Then write SPRINT_3_PROMPT.md and execute.",
+  "context_notes": "Sprint 2 is fully shipped and verified. The CLAUDE.md still says Sprint 1 is current which will confuse the next agent. Fix that first before any Sprint 3 work. No blocking issues."
+}
