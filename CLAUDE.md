@@ -12,7 +12,7 @@ Water is the primary carrier of value. This is a Phaser 4 rebuild of a working
 Vanilla JS prototype. Primary build going forward (ahupuaa-game Phaser 3 prototype
 paused 2026-05-25 -- see that repo's README for context).
 
-**Last shipped:** Context cleanup - pdf-viewer plugin deleted, 8 skill packs disabled, context window audit complete (2026-05-26)
+**Last shipped:** Sprint 3 discuss-phase - context captured, CLAUDE.md Phaser4-first rule added (2026-05-27)
 
 ---
 

@@ -1,5 +1,44 @@
 # DEVLOG - Ahupuaa v2 (Phaser 4 Rebuild)
 
+## 2026-05-27 - Sprint 3 discuss-phase (Sonnet 4.6)
+
+### What was done
+
+1. Ran `/gsd-discuss-phase sprint-3`. Identified and resolved 4 gray areas for Sprint 3.
+2. Clarified the relationship between ahapuaa-game (Phaser 3, paused) and ahapuaa-v2
+   (Phaser 4, primary build). Confirmed v2 is 1-2 sprints behind in features but has
+   cleaner architecture from Sprint 1.
+3. Created `.planning/phases/sprint-3/sprint-3-CONTEXT.md` -- all implementation decisions
+   locked for downstream planning agent.
+4. Updated CLAUDE.md Advisory Mode with "Check Phaser 4 first (canvas effects rule)".
+
+### Decisions made
+
+- Sprint 3 scope confirmed UI-only. Dual-clock/ike system from ahapuaa-game Sprint 4
+  is deferred to ahapuaa-v2 Sprint 4.
+- **Building selector:** Right-side HTML panel, HUD style, always-visible tier row
+  (2+3 greyed for loi/loko-ia), cost labels on buttons, gold border active state.
+- **Hover tooltip:** HTML cursor-following div, minimal content (terrain + Wet/Dry
+  + placed building). No placement eligibility hints.
+- **Rejection feedback:** Red tint flash via `this.time.delayedCall(300)` (not
+  setTimeout). Player-friendly reason text at bottom of selector panel, fades out
+  ~3s. Dev-mode toggle via `D` key.
+- **Tile gap:** Increase TILE_SCALE from 54/120 to ~54/96. Empirical browser tuning.
+- **Phaser 4 first rule:** Before writing custom JS for canvas effects (tints, tweens,
+  timers, particles, audio), check Phaser 4's API. HTML-for-UI remains unchanged.
+
+### Open questions
+
+- None blocking Sprint 3.
+- Sprint 4 for v2: port dual-clock/ike/Lono system from ahapuaa-game Sprint 4.
+
+### Next session goal
+
+Execute Sprint 3: run `/gsd-plan-phase sprint-3`, then execute the plan.
+Files to touch: `index.html`, `src/scenes/GameScene.js`.
+
+---
+
 ## 2026-05-26 - Context window audit and cleanup (Sonnet 4.6)
 
 ### What was done
