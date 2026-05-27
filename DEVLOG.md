@@ -1,5 +1,29 @@
 # DEVLOG - Ahupuaa v2 (Phaser 4 Rebuild)
 
+## 2026-05-26 - Context window audit and cleanup (Sonnet 4.6)
+
+### What was done
+
+1. Audited context window bloat sources: 147 deferred MCP tools and 160+ injected skills identified as primary consumers.
+2. Deleted `~/.claude/plugins/data/pdf-viewer-inline/` -- removed 9 deferred tools (no PDF workflows in any Pioneer Species project).
+3. User disabled 8 skill packs via Claude desktop app UI: Operations, Product Management, Design, Productivity, Brand Voice, Enterprise Search, Customer Support. Data and Engineering remain enabled.
+4. Verified cleanup: pdf-viewer MCP tools confirmed disconnected in subsequent session.
+
+### Decisions made
+
+- Playwright MCP kept (teacher-recommended for UI/workflow testing, 29 tools).
+- Notion MCP kept (needed for task and PRD updates, 16 tools).
+- Data and Engineering skill packs kept (relevant to active projects).
+- Skills scope note: ~160 skills from remaining packs still inject per session. If context pressure returns, revisit uninstalling additional packs.
+
+### Open questions
+
+- None blocking Sprint 3.
+
+### Next session goal
+
+- Sprint 3: building selector UI, hover tooltip, rejected placement feedback, tile gap polish.
+
 ## 2026-05-26 - Sprint 3 prep: CLAUDE.md updated, Sprint 3 scope defined (Sonnet 4.6)
 
 ### What was done
