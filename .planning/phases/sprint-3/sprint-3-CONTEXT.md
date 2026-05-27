@@ -37,11 +37,19 @@ heiau building type (culturally blocked), tech tree, river path switching.
 - **Active state:** Gold border (`#a07840`) + slightly lighter background on the selected button.
   - Consistent with End Turn button's border color.
 - **Type buttons:** One button per building type -- hale, loi, loko-ia.
-  - Each button includes placement cost: e.g., "Hale T1 -- 3 wood", "Loi -- 2 wood"
+  - Loi and Loko-ia buttons include cost: "Loi (2 wood)", "Loko-ia (3 stone)"
+  - Hale button is labeled "Hale" only -- cost varies by tier, so cost appears on tier buttons instead
   - Costs sourced from `PLACEMENT_COSTS` in `src/game/buildings.js`
-- **Tier row:** Always visible (tiers 1 / 2 / 3 buttons).
-  - When loi or loko-ia is selected (single-tier), tiers 2 and 3 are disabled/greyed out.
+- **Tier row:** All 3 tier buttons visible (T1 / T2 / T3) as a dev scaffold.
+  - Hale: all 3 tier buttons enabled and clickable. Access control is handled by `canPlace()` --
+    if the player selects T2/T3 without the required tech, rejection feedback explains why.
+    Tier buttons show costs: "T1 (3w)", "T2 (5w 2s)", "T3 (5w 5s)".
+  - Loi / Loko-ia: T2 and T3 are disabled/greyed out. These types genuinely have no higher tier
+    to unlock -- there is no future-sprint path for enabling them.
   - No layout shift on type change.
+  - **Future sprint:** When the tech/ike UI is built, update the selector to show only
+    unlocked hale tiers dynamically (auto-advance on tech gain). That work belongs with
+    the ike system (Sprint 4+), not here.
 - **Wiring:** Clicking a type button sets `this.selectedType` in GameScene.
   Clicking a tier button sets `this.selectedTier` (0-indexed: 0 = tier 1, 1 = tier 2, 2 = tier 3).
 

@@ -1,5 +1,55 @@
 # DEVLOG - Ahupuaa v2 (Phaser 4 Rebuild)
 
+## 2026-05-27 - Sprint 3 plan-phase (Sonnet 4.6)
+
+### What was done
+
+1. Ran `/gsd-plan-phase sprint-3`. Skipped research (CONTEXT.md from discuss-phase was sufficient).
+2. Created 3 PLAN.md files in `.planning/phases/sprint-3/`:
+   - PLAN-01: Tile gap polish -- TILE_SCALE from 54/120 to 54/96 (GameScene.js only)
+   - PLAN-02: Building selector panel -- HTML structure + GameScene wiring for selectedType/selectedTier
+   - PLAN-03: Hover tooltip + rejection feedback (tint flash, reason text, D-key toggle)
+3. Plan checker found 1 blocker (SINGLE_TIER_TYPES scoping bug) and 2 warnings; all resolved before
+   second verification pass, which returned VERIFICATION PASSED.
+4. Amended CONTEXT.md: Hale type button labeled "Hale" only; tier costs shown on tier buttons
+   ("T1 (3w)", "T2 (5w 2s)", "T3 (5w 5s)"). Confirmed with user.
+5. Clarified tier access design for Sprint 3: all 3 tier buttons visible as dev scaffold.
+   Hale T2/T3 accessible in UI -- canPlace() gates by tech. Loi/Loko-ia T2/T3 greyed out
+   (no higher tier exists for those types). Dynamic unlock display deferred to Sprint 4.
+
+### Decisions made
+
+- **Tier visibility:** All 3 hale tier buttons enabled in Sprint 3. canPlace() provides the
+  access gate; rejection feedback tells the player why T2/T3 fail if techs aren't unlocked.
+  Dynamic tier display (show only unlocked tiers) is Sprint 4 work, tied to the ike/tech system.
+- **Hale button label:** "Hale" only -- no cost on the type button. Cost varies by tier, so costs
+  appear on tier buttons instead of the type button. Loi and Loko-ia type buttons include cost.
+- **SINGLE_TIER_TYPES:** Declared at module level in GameScene.js (alongside BUILDING_TINT),
+  not inside create(), so the module-level updateSelector(scene) function can reference it.
+- **updateSelector(scene):** Module-level function. Plan 03 calls it directly from inside
+  GameScene.js -- not exposed on the scene instance.
+
+### Open questions
+
+- None blocking Sprint 3.
+- Sprint 4 question: how does ike accumulate and trigger tech unlocks? Reference
+  implementation is in `ahapuaa-game` Sprint 4 (Phaser 3 prototype).
+
+### Next session goal
+
+User chose to plan Sprint 4+ before executing Sprint 3, to ensure continuity.
+New chat: plan Sprint 4 (dual-clock/ike/Lono system) and Sprint 5+ based on what
+Sprint 3 delivers. Reference: `ahapuaa-game` Sprint 4 code for the ike system port.
+After that: `/gsd-execute-phase sprint-3` (plans are ready).
+
+**Sprint 4+ reuse map from Sprint 3:**
+- `updateSelector(scene)` -- extend for dynamic tier unlock display
+- `#selector-panel` button IDs -- add ike-cost labels or lock indicators to existing buttons
+- `friendlyReason()` -- extend mapping table when new canPlace reasons are added
+- `this.showRejectionText` toggle pattern -- apply to any future dev-mode toggles
+
+---
+
 ## 2026-05-27 - Sprint 3 discuss-phase (Sonnet 4.6)
 
 ### What was done
