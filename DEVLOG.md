@@ -1,5 +1,26 @@
 # DEVLOG - Ahupuaa v2 (Phaser 4 Rebuild)
 
+## 2026-05-26 - Sprint 3 prep: CLAUDE.md updated, Sprint 3 scope defined (Sonnet 4.6)
+
+### What was done
+
+1. Updated CLAUDE.md `Current Sprint` section: Sprint 1 and 2 archived as history;
+   Sprint 3 scope written (building selector UI, hover tooltip, rejected placement
+   feedback, tile gap polish).
+2. Consumed and deleted HANDOFF.json (one-shot artifact from Sprint 2 session close).
+
+### Decisions made
+
+- Sprint 3 is UI-only -- no changes to `canPlace`, `processTick`, or hydrology.
+- Heiau and shore/water/forest sprite improvements remain out of scope for Sprint 3.
+
+### Next session goal
+
+Execute Sprint 3: building selector panel, hover tooltip, rejection feedback, tile
+gap polish.
+
+---
+
 ## 2026-05-26 - Post-bootcamp triage, direction confirmed (Sonnet 4.6)
 
 ### What was done

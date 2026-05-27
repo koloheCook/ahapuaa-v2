@@ -12,7 +12,7 @@ Water is the primary carrier of value. This is a Phaser 4 rebuild of a working
 Vanilla JS prototype. Primary build going forward (ahupuaa-game Phaser 3 prototype
 paused 2026-05-25 -- see that repo's README for context).
 
-**Last shipped:** 2026-05-26 - post-bootcamp triage, Sprint 2 committed, pivot to v2 as primary confirmed
+**Last shipped:** Sprint 3 prep - CLAUDE.md updated, Sprint 3 scope defined, HANDOFF.json consumed (2026-05-26)
 
 ---
 
@@ -208,25 +208,47 @@ resolved.
 
 ---
 
+## Sprint History
+
+**Sprint 1 -- COMPLETE (2026-05-16)**
+Phaser 4.1.0 scene running; 20x56 hex tilemap with Kenney terrain atlas;
+`gameState.js` and `tiles[col][row]` initialized from worldGen pipeline;
+`map.tileToWorldXY` confirmed correct. Commit: `87a5fe7`
+
+**Sprint 2 -- COMPLETE (2026-05-26)**
+Camera pan/zoom; building placement (click to place, tint feedback); resource HUD
+(7 fields, live-updating); End Turn wired to `processTick`. Building type hardcoded
+to `hale` -- selector UI deferred to Sprint 3 by design. Commit: `ba5c471`
+
+---
+
 ## Current Sprint
 
-**Sprint 1 -- Friday, May 16 (6 hours)**
+**Sprint 3 -- Polish + Building Selector UI**
+
+**Context:**
+`this.selectedType = 'hale'` is hardcoded in `GameScene.js` line ~114.
+Building types available: `hale` (3 tiers), `loi` (1 tier), `loko-ia` (1 tier).
+Placement logic in `src/game/buildings.js` already handles all three types.
 
 **Done when:**
-- Phaser 4.1.0 scene running in browser
-- 20x56 hex tilemap rendering with Kenney terrain atlas frames (programmatic
-  color fallbacks for water and forest tiles are acceptable)
-- `gameState.js` and `tiles[col][row]` initialized from ported worldGen pipeline
-- `map.tileToWorldXY(col, row)` verified returning correct pixel centers for
-  3+ test tiles (logged to console)
-- Asset gaps 1-4 resolved at minimum with programmatic placeholder tints
+- HTML overlay panel shows buttons to select building type (hale / loi / loko-ia)
+  and tier (1 / 2 / 3 where applicable); clicking a button sets `this.selectedType`
+  and `this.selectedTier` in GameScene
+- Active selection is visually indicated (button highlight or border)
+- Hover tooltip: mousing over a tile shows terrain type, water value, and any
+  placed building (type + tier) -- rendered as HTML overlay or Phaser Text
+- Rejected placement gives brief visual feedback (red tint flash on the tile,
+  ~300ms, then restore)
+- Tile gap polish: Kenney sprite transparent margins between hexes reduced or
+  eliminated (scale adjustment or overlap tweak -- do not change tileToWorldXY)
 
-**Out of scope for Sprint 1:**
-- River path switching (Sprint 2)
-- Building placement (Sprint 2)
-- Rex board integration (post-capstone)
-- Any Akua event logic
-- Mobile layout
+**Out of scope for Sprint 3:**
+- Shore/water/forest dedicated sprites (post-capstone -- placeholder tints acceptable)
+- Heiau building type (culturally blocked until resolved)
+- River path switching UI
+- Tech tree / Ike system
+- Any game logic changes (canPlace, processTick, hydrology) -- UI only
 
 ---
 
