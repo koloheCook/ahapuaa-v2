@@ -295,6 +295,13 @@ Key terms active in this project:
 - **Blast radius** -- scope discipline limits how much a session failure damages
   the broader build; each sprint has a defined done condition so partial
   completion is still shippable
+- **Check Phaser 4 first (canvas effects rule)** -- before writing custom JS
+  for anything on the Phaser canvas (tints, tweens, timers, particles, audio,
+  input), check Phaser 4's API for a native solution first. The game-clock
+  timer (`this.time.delayedCall`) is preferred over `setTimeout`; Phaser tweens
+  are preferred over manual tint-restore loops. Scope: canvas-side effects only.
+  HTML-for-UI remains the architectural rule -- selector panels, tooltips, and
+  status zones are HTML, not Phaser game objects.
 
 ---
 
