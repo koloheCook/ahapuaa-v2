@@ -1,6 +1,6 @@
 # DEVLOG - Ahupuaa v2 (Phaser 4 Rebuild)
 
-## 2026-05-28 - Sprint 3 execute-phase partial (Sonnet 4.6)
+## 2026-05-28 - Sprint 3 execute-phase COMPLETE (Sonnet 4.6)
 
 ### What was done
 
@@ -25,10 +25,17 @@
   re-enables, tier selection works.
 - Commit: `47212ca`.
 
-**Plan 03 T01 -- Tooltip div (partial, committed as WIP)**
-- index.html: `#tooltip` div added (display:none, pointer-events:none, z-index:100).
-- WIP commit: `cb3434a`.
-- Paused before T02 (GameScene.js additions). `/gsd-pause-work` handoff created.
+**Plan 03 -- Hover tooltip + rejection feedback (COMPLETE)**
+- index.html: `#tooltip` div added (WIP commit: `cb3434a`).
+- GameScene.js: cursor-following tooltip with terrain, Wet/Dry, placed building, and (col,row) coords.
+  canvasRect offset fix: canvas is 1200px centered in narrower viewport (canvasLeft = -222.5px);
+  pointer.x is canvas-relative so canvasRect must be added for position:fixed placement.
+- Red tint flash on failed placement via `this.time.delayedCall(300)` (no setTimeout).
+  Tint restore priority: building tint > terrain tint > clearTint(). Fixed post-checkpoint:
+  occupied loi/hale tiles were calling clearTint() and losing gold/teal color.
+- `friendlyReason()` module-level function maps all canPlace reason strings to player text.
+- D-key toggle for rejection text (this.showRejectionText, default true).
+- Commits: `b0fab45` (T02), `fccdb59` (two post-checkpoint bug fixes).
 
 ### Decisions made
 
@@ -41,15 +48,14 @@
 
 ### Open questions
 
-- None blocking Plan 03 T02.
+- None blocking Sprint 4.
 
 ### Next session goal
 
-Resume Plan 03 T02: `/gsd-resume-work` then continue sprint-3 execution.
-T02 adds four blocks to GameScene.js: tooltip pointermove handler (with col/row coords),
-D-key toggle for rejection text, friendlyReason() function at module level, and expanded
-pointerdown else branch (red tint flash + fading rejection text via this.time.delayedCall).
-After T02: user visual checkpoint, then sprint-3-PLAN-03-SUMMARY.md, then phase verification.
+Execute Sprint 4: `/gsd-execute-phase sprint-4` (plans created and verified 2026-05-27).
+Wave 1: PLAN-01 (CONTENT.md -- add Hoʻoilo/Kauwela season terms).
+Wave 2 parallel: PLAN-02 (gameState.js -- month, year, ike) + PLAN-03 (resourceTick.js -- dual-clock, Lono multiplier, ike year-rollover).
+Wave 3: PLAN-04 (index.html HUD + GameScene.js SEASON_LABEL + updateHUD extension + End Turn hook).
 
 ---
 
