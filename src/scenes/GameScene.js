@@ -47,10 +47,10 @@ export default class GameScene extends Phaser.Scene {
     layer.setVisible(false);
 
     // Kenney hexagonTerrain atlas frames are 120x140 px native. The Tiled JSON cell
-    // footprint is 54x46. Scale by cell-width / polygon-height (~96px) so the hex polygon
-    // fills the cell without transparent-margin gaps. Frame native size is 120x140px;
-    // polygon occupies ~96px of that. (Not in original Phaser 3 spec; logged as v2 delta.)
-    const TILE_SCALE = 54 / 96;
+    // footprint is 54x46. Scale by cell-width / frame-width so sprites fit the cell.
+    // The isometric 3D style means tiles naturally overlap neighboring rows -- that is
+    // the art style, not a bug. (Not in original Phaser 3 spec; logged as v2 delta.)
+    const TILE_SCALE = 54 / 120;
 
     // 4. Build world state via the ported pipeline. tiles[col][row] is the canonical store.
     const grid = new HexGrid(COLS, ROWS);
