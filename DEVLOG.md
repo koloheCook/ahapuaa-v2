@@ -1,5 +1,55 @@
 # DEVLOG - Ahupuaa v2 (Phaser 4 Rebuild)
 
+## 2026-05-27 - Sprint 4 plan-phase (Sonnet 4.6)
+
+### What was done
+
+1. Ran `/gsd-plan-phase sprint-4`. Skipped research (CONTEXT.md from discuss-phase fully
+   covered all decisions D-01 through D-18 with exact formulas and insertion points).
+2. Created 4 PLAN.md files in `.planning/phases/sprint-4/`:
+   - PLAN-01 (Wave 1): CONTENT.md update -- add Hoʻoilo/Kauwela under Events > Seasonal variation;
+     verify ʻIke entry in Core Glossary. CONTENT.md-only, no code changes.
+   - PLAN-02 (Wave 2, parallel): gameState.js -- add `month: 1`, `year: 1` at top level;
+     add `ike: 0` inside resources object.
+   - PLAN-03 (Wave 2, parallel): resourceTick.js -- add month formula `((state.turn - 1) % 12) + 1`,
+     isWetSeason flag, Lono x1.5 multiplier for loi taro only, year rollover block with ike
+     accumulation (heiauCount * 2 + 1 base per year).
+   - PLAN-04 (Wave 3): index.html (Year/Month/Season spans above Turn; ʻIke span after Stone) +
+     GameScene.js (SEASON_LABEL module-level constant, updateHUD 4-field extension,
+     `updateSelector(this)` hook in End Turn handler).
+3. Plan checker returned VERIFICATION PASSED -- 0 blockers, 1 non-blocking warning
+   (cross-sprint dependency note: Plan-04 calls updateSelector defined by Sprint 3, not
+   enforced in depends_on frontmatter; `autonomous: false` + human checkpoint covers it).
+4. Plans committed: `408a86d`.
+
+### Decisions made
+
+- **Wave 2 parallelism:** Plans 02 and 03 run in parallel (different files, no shared deps).
+  Plan-04 is Wave 3, depends on both.
+- **Month formula locked:** `((state.turn - 1) % 12) + 1` -- v2-specific (End Turn pre-increments
+  turn before processTick). P3 formula `(state.turn % 12) + 1` would be wrong here.
+- **ike placement:** `state.resources.ike` (inside resources), `state.month`/`state.year`
+  at top level. Both confirmed and enforced in plan acceptance criteria.
+- **No second taro floor:** CRITICAL CONSTRAINTS section in Plan-03 explicitly prohibits
+  adding a second `Math.max(0, state.resources.taro)` call (already present from Sprint 2).
+- **SEASON_LABEL at module level:** Alongside BUILDING_TINT and SINGLE_TIER_TYPES (Sprint 3
+  deliverable), not inside create(). Hawaiian strings sourced from CONTENT.md via Plan-01.
+
+### Open questions
+
+- None blocking Sprint 4 execution.
+- Sprint 5: Masonry ike threshold value (Sprint 5 discuss-phase).
+- Sprint 5: Carpentry Eureka trigger location (processTick vs. placement handler).
+
+### Next session goal
+
+Execute Sprint 3: `/gsd-execute-phase sprint-3` (plans created and verified 2026-05-27).
+Then execute Sprint 4: `/gsd-execute-phase sprint-4`.
+Order is mandatory -- Sprint 4 Plan-04 calls `updateSelector(scene)` which is defined by
+Sprint 3 Plan-02.
+
+---
+
 ## 2026-05-27 - Sprint 4 discuss-phase (Sonnet 4.6)
 
 ### What was done
