@@ -26,6 +26,7 @@ const TERRAIN_TO_TINT = {
 };
 
 const BUILDING_TINT = { hale: 0xffd700, loi: 0x00ffcc, 'loko-ia': 0x4488ff };
+const SINGLE_TIER_TYPES = new Set(['loi', 'loko-ia']);
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -111,9 +112,39 @@ export default class GameScene extends Phaser.Scene {
       this.cameras.main.zoom = zoom;
     });
 
-    // Building placement state (selector UI is Sprint 3 scope).
+    // Building placement state -- wired to selector panel buttons below.
     this.selectedType = 'hale';
     this.selectedTier = 0;
+
+    // Selector panel wiring.
+    document.getElementById('btn-type-hale').addEventListener('click', () => {
+      this.selectedType = 'hale';
+      this.selectedTier = Math.min(this.selectedTier, 2);
+      updateSelector(this);
+    });
+    document.getElementById('btn-type-loi').addEventListener('click', () => {
+      this.selectedType = 'loi';
+      this.selectedTier = 0;
+      updateSelector(this);
+    });
+    document.getElementById('btn-type-loko-ia').addEventListener('click', () => {
+      this.selectedType = 'loko-ia';
+      this.selectedTier = 0;
+      updateSelector(this);
+    });
+    document.getElementById('btn-tier-0').addEventListener('click', () => {
+      this.selectedTier = 0;
+      updateSelector(this);
+    });
+    document.getElementById('btn-tier-1').addEventListener('click', () => {
+      this.selectedTier = 1;
+      updateSelector(this);
+    });
+    document.getElementById('btn-tier-2').addEventListener('click', () => {
+      this.selectedTier = 2;
+      updateSelector(this);
+    });
+    updateSelector(this);
 
     this.input.on('pointerdown', (pointer) => {
       if (pointer.rightButtonDown()) return;
@@ -151,4 +182,37 @@ function updateHUD() {
   document.getElementById('hud-fish').textContent   = state.resources.fish;
   document.getElementById('hud-wood').textContent   = state.resources.wood;
   document.getElementById('hud-stone').textContent  = state.resources.stone;
+}
+
+function updateSelector(scene) {
+  const typeIds = ['hale', 'loi', 'loko-ia'];
+  for (const t of typeIds) {
+    const btn = document.getElementById(`btn-type-${t}`);
+    if (!btn) continue;
+    if (t === scene.selectedType) {
+      btn.style.borderColor = '#a07840';
+      btn.style.background  = 'rgba(80,60,20,0.7)';
+    } else {
+      btn.style.borderColor = '#5a4a30';
+      btn.style.background  = '#3a2a10';
+    }
+  }
+  for (let i = 0; i < 3; i++) {
+    const btn = document.getElementById(`btn-tier-${i}`);
+    if (!btn) continue;
+    if (i === scene.selectedTier) {
+      btn.style.borderColor = '#a07840';
+      btn.style.background  = 'rgba(80,60,20,0.7)';
+    } else {
+      btn.style.borderColor = '#5a4a30';
+      btn.style.background  = '#3a2a10';
+    }
+    if (i > 0 && SINGLE_TIER_TYPES.has(scene.selectedType)) {
+      btn.style.opacity      = '0.4';
+      btn.style.pointerEvents = 'none';
+    } else {
+      btn.style.opacity      = '1';
+      btn.style.pointerEvents = 'auto';
+    }
+  }
 }
