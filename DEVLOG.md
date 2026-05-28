@@ -1,5 +1,58 @@
 # DEVLOG - Ahupuaa v2 (Phaser 4 Rebuild)
 
+## 2026-05-28 - Sprint 3 execute-phase partial (Sonnet 4.6)
+
+### What was done
+
+1. Ran `/gsd-execute-phase sprint-3`. Executed Plans 01 and 02 inline with user visual
+   checkpoints. Plan 03 paused mid-execution (T01 complete, T02 pending).
+
+**Plan 01 -- Tile gap polish (revert)**
+- Changed TILE_SCALE from 54/120 to 54/96 per plan spec. Browser-tested -- made overlap
+  WORSE (white hex borders colliding). Also tested 54/112 and 54/116. All values above
+  54/120 produce visible white border artifacts.
+- Root cause re-diagnosed: the Kenney hex sprites are isometric 3D tiles. The row overlap
+  is the art style, not a scale bug. No scale value fixes it.
+- Reverted to 54/120 with corrected comment. Plan 01 closed as "accepted as-is."
+- Commits: `42b9a34` (attempt), `ab2e9cb` (revert).
+
+**Plan 02 -- Building selector panel (COMPLETE)**
+- index.html: added `#selector-panel` with type buttons (Hale / Loi / Loko-ia) and
+  tier row (T1 / T2 / T3). All inline styles matching HUD language.
+- GameScene.js: `SINGLE_TIER_TYPES` const at module level; `updateSelector(scene)` function
+  after `updateHUD`; click handlers wired in `create()`.
+- User verified: active state on load (Hale + T1 highlighted), Loi dims T2/T3, Hale
+  re-enables, tier selection works.
+- Commit: `47212ca`.
+
+**Plan 03 T01 -- Tooltip div (partial, committed as WIP)**
+- index.html: `#tooltip` div added (display:none, pointer-events:none, z-index:100).
+- WIP commit: `cb3434a`.
+- Paused before T02 (GameScene.js additions). `/gsd-pause-work` handoff created.
+
+### Decisions made
+
+- **TILE_SCALE = 54/120 is final** -- row overlap is the isometric Kenney sprite art style.
+  Do not revisit unless switching to flat-top hex sprites (post-capstone art decision).
+- **updateSelector is module-level** -- Plan 03 calls it as `updateSelector(this)` from
+  `create()`; must stay module-level.
+- **Add col/row to tooltip** -- user asked for DevMode tile coordinate lookup during Plan 02
+  checkpoint. Include `(col, row)` in the hover tooltip content when Plan 03 T02 executes.
+
+### Open questions
+
+- None blocking Plan 03 T02.
+
+### Next session goal
+
+Resume Plan 03 T02: `/gsd-resume-work` then continue sprint-3 execution.
+T02 adds four blocks to GameScene.js: tooltip pointermove handler (with col/row coords),
+D-key toggle for rejection text, friendlyReason() function at module level, and expanded
+pointerdown else branch (red tint flash + fading rejection text via this.time.delayedCall).
+After T02: user visual checkpoint, then sprint-3-PLAN-03-SUMMARY.md, then phase verification.
+
+---
+
 ## 2026-05-27 - Sprint 4 plan-phase (Sonnet 4.6)
 
 ### What was done
