@@ -33,6 +33,7 @@ Do not guess. Flag the term with `[VERIFY]` and leave a note. Better to have a p
 | Aloha 'Āina | Love of the land | Cultural framing |
 | Kapu | Sacred prohibition / taboo | Future event system |
 | Mana | Spiritual power | Morale system (future) |
+| ʻIke | Knowledge / wisdom | ʻIke accumulation (game information / tech unlock resource) |
 
 ---
 
@@ -116,6 +117,8 @@ Do not guess. Flag the term with `[VERIFY]` and leave a note. Better to have a p
 
 ### Planned Events (not yet built)
 - Seasonal variation (wet/dry season cycles)
+  - Hoʻoilo -- wet season, months 11-12 and 1-4 (six months)
+  - Kauwela -- dry season, months 5-10 (six months)
 - Neighboring settlement contact
 - Chief visit (morale event)
 - Kapu violation (morale penalty)
