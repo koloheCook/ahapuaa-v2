@@ -1,5 +1,49 @@
 # DEVLOG - Ahupuaa v2 (Phaser 4 Rebuild)
 
+## 2026-05-27 - Sprint 4 discuss-phase (Sonnet 4.6)
+
+### What was done
+
+1. Ran `/gsd-discuss-phase sprint-4`. Discussed 2 gray areas: season names and tech unlock model.
+2. Created `.planning/phases/sprint-4/sprint-4-CONTEXT.md` -- all implementation decisions locked.
+3. Created `.planning/phases/sprint-4/sprint-4-DISCUSSION-LOG.md`.
+4. Committed both files: `fbe5838`.
+5. Added `CONTENT.md` to the repo (repo root: `./CONTENT.md`). This is the canonical Hawaiian
+   cultural baseline -- verified terms, building descriptions, UI text, research tree, and correct
+   diacriticals. It was previously used in ahapuaa-game and is now the authoritative source for
+   this project. CLAUDE.md updated to document its filepath and purpose. All Hawaiian strings in
+   code must be sourced from this file; it grows over time as terms are researched and confirmed.
+
+### Decisions made
+
+- **Season names strategy:** Sprint 4 Plan 01 is a CONTENT.md-only update adding Hoʻoilo (wet,
+  months 11-4) and Kauwela (dry, months 5-10). Terms only, correct diacriticals. Code references
+  CONTENT.md -- no Hawaiian strings without backing. Aligns with CLAUDE.md Hawaiian term rule.
+- **Tech unlock model (Sprint 5 design):** Hybrid Eureka + ike accumulation (Civ6 model).
+  - Carpentry: Eureka -- auto-unlocks when player builds 3 hale (Sprint 5 implements check)
+  - Masonry: ike threshold auto-unlock (threshold TBD in Sprint 5 discuss)
+  - Both: auto-push to state.techs[], no player action required
+- **Sprint 4 End Turn hook:** `updateSelector(this)` added after `updateHUD()` in End Turn handler.
+  One line. Sprint 5 adds Eureka/ike threshold checks in processTick without touching End Turn.
+- **All other Sprint 4 logic:** Pre-decided from P3 sprint4_prompt.md (month formula, wet season
+  definition, Lono multiplier, ike year-rollover formula, state additions).
+
+### Open questions
+
+- Masonry ike threshold value -- Sprint 5 discuss-phase.
+- Eureka trigger location (processTick vs placement handler) -- Sprint 5 discuss-phase.
+
+### Next session goal
+
+Run `/gsd-plan-phase sprint-4`. Expected output: 4 plan files.
+  - Plan 01: CONTENT.md update (Hoʻoilo/Kauwela terms only)
+  - Plan 02: gameState.js additions (month, year, ike)
+  - Plan 03: resourceTick.js (dual-clock, Lono multiplier, ike year-rollover)
+  - Plan 04: index.html (HUD spans) + GameScene.js (SEASON_LABEL, updateHUD extension, End Turn hook)
+After sprint-4 plans pass plan-checker: run `/gsd-discuss-phase sprint-5`.
+
+---
+
 ## 2026-05-27 - Sprint 3 plan-phase (Sonnet 4.6)
 
 ### What was done
