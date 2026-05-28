@@ -1,5 +1,31 @@
 # DEVLOG - Ahupuaa v2 (Phaser 4 Rebuild)
 
+## 2026-05-28 - Sprint 4 pre-flight: plan verification (Sonnet 4.6)
+
+### What was done
+
+Verified all four Sprint 4 plans against the live post-Sprint-3 codebase before execution.
+
+- **PLAN-01 (CONTENT.md):** CLEAR. No code conflicts; CONTENT.md-only edit.
+- **PLAN-02 (gameState.js):** CLEAR. `state.resources` has no `ike` yet; no `month`/`year` at top level. All three additions land cleanly.
+- **PLAN-03 (resourceTick.js):** CLEAR. `state.turn` starts at 0; End Turn does `state.turn++` before `processTick()` (lines 226-228). Formula `((state.turn - 1) % 12) + 1` confirmed correct. Taro floor present at line 14 -- no duplicate will be added.
+- **PLAN-04 (index.html + GameScene.js):** Fixed. Stale line numbers in Task 2 `read_first`: End Turn handler was listed as lines 134-138 (actual: 225-229); updateHUD listed as 145-153 (actual: 236-244). Sprint 3 added ~100 lines of tooltip/rejection/selector code between plan-write and plan-execution. Line numbers corrected; all logic, IDs, and formula assumptions verified correct.
+
+### Decisions made
+
+- No code changes this session -- doc fix only.
+- Sprint 4 plans are verified and cleared for execution.
+
+### Open questions
+
+- None blocking Sprint 4.
+
+### Next session goal
+
+Execute Sprint 4: `/gsd-execute-phase sprint-4`.
+
+---
+
 ## 2026-05-28 - Sprint 3 execute-phase COMPLETE (Sonnet 4.6)
 
 ### What was done

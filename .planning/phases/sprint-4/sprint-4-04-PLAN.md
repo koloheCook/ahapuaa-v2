@@ -172,7 +172,7 @@ dependency and verify Sprint 3 Plan 02 is complete before executing this plan.
   <name>Task 2: Add SEASON_LABEL, extend updateHUD, and add updateSelector hook in GameScene.js</name>
   <files>src/scenes/GameScene.js</files>
   <read_first>
-    - src/scenes/GameScene.js -- read the full file before editing; locate module-level constants (lines 11-28), the End Turn handler (lines 134-138), and the updateHUD function (lines 145-153)
+    - src/scenes/GameScene.js -- read the full file before editing; locate module-level constants (lines 11-28), the End Turn handler (lines 225-229), and the updateHUD function (lines 236-244)
     - .planning/phases/sprint-4/sprint-4-CONTEXT.md -- D-15 (updateHUD extension), D-16 (SEASON_LABEL module-level), D-17 (updateSelector hook), D-18 (no tech logic)
     - CONTENT.md -- confirm exact spelling of Hoʻoilo and Kauwela (copy characters from file; do not type fresh)
     - .planning/phases/sprint-3/sprint-3-PLAN-02.md -- confirms updateSelector(scene) is a module-level function; Sprint 4 calls it as updateSelector(this)
