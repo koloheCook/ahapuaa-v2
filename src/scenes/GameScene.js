@@ -145,6 +145,35 @@ export default class GameScene extends Phaser.Scene {
       updateSelector(this);
     });
     updateSelector(this);
+    this.showRejectionText = true;
+    const tooltipEl = document.getElementById('tooltip');
+
+    this.input.on('pointermove', (pointer) => {
+      const worldPoint = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+      const tileXY = this.map.worldToTileXY(worldPoint.x, worldPoint.y);
+      if (!tileXY) { tooltipEl.style.display = 'none'; return; }
+      const col = tileXY.x, row = tileXY.y;
+      if (col < 0 || col >= COLS || row < 0 || row >= ROWS) { tooltipEl.style.display = 'none'; return; }
+      const tile = state.tiles[col][row];
+      let html = cap(tile.terrainType) + '<br>' + (tile.isWet ? 'Wet' : 'Dry');
+      if (tile.buildingId) {
+        const building = state.buildings[tile.buildingId];
+        if (building) html += '<br>' + cap(building.type) + ' T' + (building.tier + 1);
+      }
+      html += '<br><span style="opacity:0.5;font-size:11px;">(' + col + ',' + row + ')</span>';
+      tooltipEl.innerHTML = html;
+      tooltipEl.style.left = (pointer.x + 14) + 'px';
+      tooltipEl.style.top  = (pointer.y + 14) + 'px';
+      tooltipEl.style.display = 'block';
+    });
+    this.input.on('pointerout', () => { tooltipEl.style.display = 'none'; });
+
+    this.input.keyboard.on('keydown-D', () => {
+      this.showRejectionText = !this.showRejectionText;
+      if (!this.showRejectionText) {
+        document.getElementById('rejection-reason').style.opacity = '0';
+      }
+    });
 
     this.input.on('pointerdown', (pointer) => {
       if (pointer.rightButtonDown()) return;
@@ -154,11 +183,35 @@ export default class GameScene extends Phaser.Scene {
       const col = tileXY.x, row = tileXY.y;
       if (col < 0 || col >= COLS || row < 0 || row >= ROWS) return;
       const tile = state.tiles[col][row];
-      if (canPlace(tile, this.selectedType, this.selectedTier, state).ok) {
+      const placement = canPlace(tile, this.selectedType, this.selectedTier, state);
+      if (placement.ok) {
         placeBuilding(tile, this.selectedType, this.selectedTier, state);
         const img = this.tileImages[`${col},${row}`];
         if (img) img.setTint(BUILDING_TINT[this.selectedType] ?? 0xffd700);
         updateHUD();
+      } else {
+        const img = this.tileImages[`${col},${row}`];
+        if (img) {
+          img.setTint(0xff0000);
+          this.time.delayedCall(300, () => {
+            const origTint = TERRAIN_TO_TINT[tile.terrainType];
+            if (origTint !== undefined) {
+              img.setTint(origTint);
+            } else {
+              img.clearTint();
+            }
+          });
+        }
+        if (this.showRejectionText) {
+          const rrEl = document.getElementById('rejection-reason');
+          rrEl.textContent = friendlyReason(placement.reason);
+          rrEl.style.transition = 'none';
+          rrEl.style.opacity = '1';
+          requestAnimationFrame(() => {
+            rrEl.style.transition = 'opacity 3s';
+            rrEl.style.opacity = '0';
+          });
+        }
       }
     });
 
@@ -215,4 +268,30 @@ function updateSelector(scene) {
       btn.style.pointerEvents = 'auto';
     }
   }
+}
+
+function cap(s) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function friendlyReason(reason) {
+  if (reason === 'tile already occupied')           return 'Tile already occupied';
+  if (reason === 'must harvest forest (forestLevel > 0) before building here') return 'Clear forest first';
+  if (reason === 'mountain tiles are not buildable') return "Can't build on mountain";
+  if (reason === 'loi requires wet tile')           return 'Loi needs a wet tile';
+  if (reason === 'loko-ia requires wet tile')       return 'Loko-ia needs a wet tile';
+  if (reason.startsWith('hale requires land tile'))               return 'Hale needs land';
+  if (reason.startsWith('loi requires flat or stream tile'))      return 'Loi needs flat or stream';
+  if (reason.startsWith('loko-ia requires shore or stream tile')) return 'Loko-ia needs shore or stream';
+  if (reason.startsWith('tier 1 hale'))             return 'Requires Carpentry tech';
+  if (reason.startsWith('tier 2 hale'))             return 'Requires Carpentry + Masonry';
+  if (reason.startsWith('insufficient resources - need ')) {
+    try {
+      const costs = JSON.parse(reason.slice('insufficient resources - need '.length));
+      return Object.entries(costs).map(([res, amt]) => `Not enough ${res} (need ${amt})`).join(' + ');
+    } catch {
+      return reason;
+    }
+  }
+  return reason;
 }
