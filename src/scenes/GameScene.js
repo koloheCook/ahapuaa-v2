@@ -147,6 +147,7 @@ export default class GameScene extends Phaser.Scene {
     updateSelector(this);
     this.showRejectionText = true;
     const tooltipEl = document.getElementById('tooltip');
+    const canvasRect = this.sys.canvas.getBoundingClientRect();
 
     this.input.on('pointermove', (pointer) => {
       const worldPoint = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
@@ -162,8 +163,8 @@ export default class GameScene extends Phaser.Scene {
       }
       html += '<br><span style="opacity:0.5;font-size:11px;">(' + col + ',' + row + ')</span>';
       tooltipEl.innerHTML = html;
-      tooltipEl.style.left = (pointer.x + 14) + 'px';
-      tooltipEl.style.top  = (pointer.y + 14) + 'px';
+      tooltipEl.style.left = (canvasRect.left + pointer.x + 14) + 'px';
+      tooltipEl.style.top  = (canvasRect.top + pointer.y + 14) + 'px';
       tooltipEl.style.display = 'block';
     });
     this.input.on('pointerout', () => { tooltipEl.style.display = 'none'; });
@@ -194,11 +195,16 @@ export default class GameScene extends Phaser.Scene {
         if (img) {
           img.setTint(0xff0000);
           this.time.delayedCall(300, () => {
-            const origTint = TERRAIN_TO_TINT[tile.terrainType];
-            if (origTint !== undefined) {
-              img.setTint(origTint);
+            const building = tile.buildingId ? state.buildings[tile.buildingId] : null;
+            if (building) {
+              img.setTint(BUILDING_TINT[building.type] ?? 0xffd700);
             } else {
-              img.clearTint();
+              const origTint = TERRAIN_TO_TINT[tile.terrainType];
+              if (origTint !== undefined) {
+                img.setTint(origTint);
+              } else {
+                img.clearTint();
+              }
             }
           });
         }
