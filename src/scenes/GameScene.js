@@ -27,6 +27,7 @@ const TERRAIN_TO_TINT = {
 
 const BUILDING_TINT = { hale: 0xffd700, loi: 0x00ffcc, 'loko-ia': 0x4488ff };
 const SINGLE_TIER_TYPES = new Set(['loi', 'loko-ia']);
+const SEASON_LABEL = { wet: 'Hoʻoilo', dry: 'Kauwela' };
 
 export default class GameScene extends Phaser.Scene {
   constructor() {
@@ -226,6 +227,7 @@ export default class GameScene extends Phaser.Scene {
       state.turn++;
       processTick(state, state.tiles);
       updateHUD();
+      updateSelector(this);
     });
 
     // Initial HUD render.
@@ -241,6 +243,11 @@ function updateHUD() {
   document.getElementById('hud-fish').textContent   = state.resources.fish;
   document.getElementById('hud-wood').textContent   = state.resources.wood;
   document.getElementById('hud-stone').textContent  = state.resources.stone;
+  const isWet = state.month >= 11 || state.month <= 4;
+  document.getElementById('hud-year').textContent   = state.year;
+  document.getElementById('hud-month').textContent  = state.month;
+  document.getElementById('hud-season').textContent = isWet ? SEASON_LABEL.wet : SEASON_LABEL.dry;
+  document.getElementById('hud-ike').textContent    = state.resources.ike;
 }
 
 function updateSelector(scene) {
