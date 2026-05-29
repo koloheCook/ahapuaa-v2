@@ -1,0 +1,33 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-05-29T18:05:56Z",
+  "phase": "sprint-4",
+  "phase_name": "Dual-Clock System + ʻIke Accumulation",
+  "phase_dir": ".planning/phases/sprint-4",
+  "plan": null,
+  "task": null,
+  "total_tasks": null,
+  "status": "between-phases",
+  "completed_tasks": [
+    {"id": "sprint-4-01", "name": "CONTENT.md Hawaiian terms baseline", "status": "done", "commit": "0a253c2"},
+    {"id": "sprint-4-02", "name": "gameState.js month/year/ike additions", "status": "done", "commit": "acf9b22"},
+    {"id": "sprint-4-03", "name": "resourceTick.js dual-clock + Lono multiplier", "status": "done", "commit": "425b2af"},
+    {"id": "sprint-4-04", "name": "HUD wiring + browser checkpoint", "status": "done", "commit": "f85a199"}
+  ],
+  "remaining_tasks": [],
+  "blockers": [
+    {"description": "origin/master is 13 commits behind local master", "type": "human_action", "workaround": "git push origin master"}
+  ],
+  "human_actions_pending": [
+    {"action": "git push origin master", "context": "13 commits from sprint-4 execution are unpushed", "blocking": false},
+    {"action": "Run /gsd-extract-learnings sprint-4", "context": "Capture design decisions (hale/taro relationship, v2 formula) before they're lost", "blocking": false}
+  ],
+  "decisions": [
+    {"decision": "Hale raises populationCap only -- no direct taro effect", "rationale": "Confirmed correct per design. Taro changes at End Turn via loi production and population consumption. No Sprint 4 requirement defined hale-to-taro.", "phase": "sprint-4"},
+    {"decision": "Month formula is ((state.turn - 1) % 12) + 1 NOT (state.turn % 12) + 1", "rationale": "v2 End Turn handler pre-increments state.turn BEFORE calling processTick. P3 prototype did not pre-increment -- the P3 formula is wrong for v2.", "phase": "sprint-4"},
+    {"decision": "SEASON_LABEL declared at module scope, not inside create()", "rationale": "Consistent with TERRAIN_TO_FRAME, TERRAIN_TO_TINT, BUILDING_TINT pattern. Required for updateHUD() to reference it without passing as parameter.", "phase": "sprint-4"}
+  ],
+  "uncommitted_files": [],
+  "next_action": "Run /gsd-extract-learnings sprint-4, then /gsd-discuss-phase sprint-5",
+  "context_notes": "Sprint 4 is 100% complete and verified. Three open questions for Sprint 5: (1) population growth trigger, (2) Carpentry Eureka placement handler vs processTick, (3) Pop 5/0 display oddity on game start."
+}
