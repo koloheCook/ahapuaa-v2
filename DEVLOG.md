@@ -1,5 +1,59 @@
 # DEVLOG - Ahupuaa v2 (Phaser 4 Rebuild)
 
+## 2026-05-29 - Sprint 4 COMPLETE (Sonnet 4.6)
+
+### What was done
+
+Executed all four Sprint 4 plans across 3 waves. Verification: 7/7 must-haves passed.
+
+**Plan 01 -- CONTENT.md baseline (Wave 1)**
+- Added ʻIke row to Core Glossary table (U+02BB ʻokina confirmed)
+- Expanded "Seasonal variation" under Events with Hoʻoilo (wet, months 11-12 and 1-4) and Kauwela (dry, months 5-10)
+- Committed before any code references these strings (D-01 satisfied)
+- Commits: `0a253c2`, `8e0eeb5`
+
+**Plan 02 -- gameState.js additions (Wave 2, parallel)**
+- Added `ike: 0` inside resources; `month: 1` and `year: 1` at top level
+- File remains import-free (architectural rule preserved)
+- Commits: `acf9b22`, `3581590`
+
+**Plan 03 -- resourceTick.js dual-clock + Lono multiplier (Wave 2, parallel)**
+- Month derivation: `((state.turn - 1) % 12) + 1` (v2-correct; P3 formula wrong for pre-increment pattern)
+- isWetSeason: `month >= 11 || month <= 4`
+- loi taro: 1.5x multiplier during wet season; loko-ia fish unchanged
+- Year rollover block: `state.month` updated every tick; year++ and month reset on turn%12===0; ike += heiauCount*2 + 1
+- No duplicate taro floor added
+- Smoke test passed (turn 12, no buildings: year=2, month=1, ike=1)
+- Commits: `425b2af`, `886fbe4`
+
+**Plan 04 -- HUD wiring (Wave 3, autonomous: false)**
+- index.html: hud-year / hud-month / hud-season above Turn line; hud-ike below Stone line
+- GameScene.js: SEASON_LABEL at module level (not inside create()); updateHUD() extended with isWet + 4 getElementById writes; updateSelector(this) added to End Turn handler
+- Browser-verified (all 9 checklist items approved):
+  - Year 1 / Month 1 / Hoʻoilo on game start
+  - Year 2 / Month 1 / Hoʻoilo / ʻIke 1 after turn 12
+  - Kauwela at month 5
+  - Sprint 3 selector panel unaffected; building placement unaffected
+- Commits: `ca83b51`, `f85a199`, `3c9059b`
+
+### Decisions made
+
+- Hale does NOT affect taro directly -- confirmed correct per design. Hale raises popCap only; taro changes at End Turn based on loi production and population consumption. No Sprint 4 requirement defined a hale-to-taro relationship.
+- Phaser atlas geometry warning (`Image tile area not tile size multiple`) is pre-existing and non-blocking.
+- Population growth mechanic (pop numerator increasing) deferred post-capstone -- only starvation (decrease) is implemented.
+
+### Open questions
+
+- Population growth trigger: when and how does population grow toward popCap? Not defined for Sprint 4 or 5 yet.
+- Carpentry Eureka (build 3 hale to unlock tech): Sprint 5 discuss-phase will decide whether trigger runs in processTick or in the placement handler.
+- `Pop 5 / 0` on game start is a display oddity inherited from Sprint 2 scope -- population starts at 5 but popCap starts at 0 until a hale is placed. Low priority; log for cleanup sprint.
+
+### Next session goal
+
+Sprint 5: discuss-phase to define Carpentry Eureka, tech tree UI, and population growth mechanic.
+
+---
+
 ## 2026-05-28 - Sprint 4 pre-flight: plan verification (Sonnet 4.6)
 
 ### What was done
