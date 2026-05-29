@@ -1,5 +1,40 @@
 # DEVLOG - Ahupuaa v2 (Phaser 4 Rebuild)
 
+## 2026-05-29 - Sprint 4 learnings extracted (Sonnet 4.6)
+
+### What was done
+
+Resumed from Sprint 4 COMPLETE. Ran `/gsd-extract-learnings sprint-4`. Read all 4 PLAN.md
+files, 4 SUMMARY.md files, and VERIFICATION.md for sprint-4. Extracted 19 items into
+`.planning/phases/sprint-4/sprint-4-LEARNINGS.md`:
+- 7 decisions (month formula, state field placement, SEASON_LABEL scope, Lono multiplier
+  scope, CONTENT.md-first pattern, isWet derived-at-render, hale/taro separation)
+- 4 lessons (P3 formula divergence risk, CONTENT.md pre-existing ʻokina inconsistency,
+  unreachable starvation check, dormant heiau ike path)
+- 5 patterns (CONTENT.md-first commit, wave-based parallel execution, module-level
+  constant, sprint hook point, derived-at-render)
+- 3 surprises (P3 month formula silent regression risk, autonomous:false browser value,
+  undefined population growth mechanic)
+
+Also reconstructed `.planning/STATE.md` (was missing).
+
+### Decisions made
+
+No new decisions -- this was a documentation-only session.
+
+### Open questions
+
+Same as end of Sprint 4 session:
+- Population growth trigger: when/how does pop grow toward popCap?
+- Carpentry Eureka: processTick vs placement handler?
+- `Pop 5 / 0` display oddity at game start (low priority)
+
+### Next session goal
+
+`/gsd-discuss-phase sprint-5` in a new chat. Use STATE.md and LEARNINGS.md as context.
+
+---
+
 ## 2026-05-29 - Sprint 4 COMPLETE (Sonnet 4.6)
 
 ### What was done
