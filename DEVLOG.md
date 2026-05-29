@@ -1,5 +1,43 @@
 # DEVLOG - Ahupuaa v2 (Phaser 4 Rebuild)
 
+## 2026-05-29 - Sprint 5 context captured (Sonnet 4.6)
+
+### What was done
+
+Resumed from Sprint 4 COMPLETE (HANDOFF.json deleted as one-shot artifact). Ran
+`/gsd-discuss-phase sprint-5`. Discussed 4 gray areas; wrote
+`.planning/phases/sprint-5/sprint-5-CONTEXT.md` and `sprint-5-DISCUSSION-LOG.md`.
+
+Key decisions captured:
+- Sprint 5 scope: Carpentry Eureka (build 3 hale, immediate unlock), Masonry threshold
+  (ike >= 3, placeholder), populationCap start-state fix (0 -> 5 in gameState.js)
+- New `src/game/techs.js` -- `checkTechUnlocks(state)` follows Systems pattern
+  (zero Phaser imports); returns array of newly-unlocked tech strings; called from
+  GameScene.js after placeBuilding() AND after processTick()
+- Unlock feedback: reuse existing `#rejection-reason` fade-out element + success.ogg
+- Population growth deferred post-capstone
+
+### Decisions made
+
+- Carpentry: placement-time Eureka (Civ6 model -- immediate T2 availability)
+- Masonry threshold: 3 ike (placeholder; depends on unresolved ike cadence decision)
+- populationCap initialized to 5 (not 0) in gameState.js
+- Quarterly ike cadence (4/year) deferred -- own sprint
+
+### Open questions
+
+Same deferred design questions flagged:
+- Population growth trigger (post-capstone)
+- Quarterly ike collection cadence (1/quarter = 4/year)
+- Resource collection mechanic: turn-based vs player-directed (Warcraft model)
+- Village/event tech grants (future mechanic)
+
+### Next session goal
+
+`/gsd-plan-phase sprint-5` in a new chat.
+
+---
+
 ## 2026-05-29 - Sprint 4 learnings extracted (Sonnet 4.6)
 
 ### What was done
