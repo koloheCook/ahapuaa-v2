@@ -6,52 +6,50 @@
 ahupuaʻa from mountain to sea, balancing taro, fish, wood, stone, population, and ʻike
 through seasonal cycles and traditional buildings.
 
-**Current focus:** Sprint 4 COMPLETE. Ready for Sprint 5 discuss-phase.
+**Current focus:** Sprint 5 context captured. Ready for /gsd-plan-phase sprint-5.
 
 ---
 
 ## Current Position
 
-- **Sprint:** 4 of ~7 (estimated)
-- **Status:** Between phases -- all Sprint 4 plans executed and verified
-- **Last plan completed:** sprint-4-04 (HUD wiring + browser checkpoint)
-- **Progress:** [████████░░] ~60%
+- **Sprint:** 5 of ~7 (estimated)
+- **Status:** Context gathered -- ready to plan
+- **Last completed:** sprint-4 (dual-clock + ike HUD wired, verified 7/7)
+- **Progress:** [████████░░] ~65%
 
 ---
 
 ## Recent Decisions
 
-- **Hale raises popCap only** -- no direct taro effect. Taro changes at End Turn via
-  loi production and population consumption. No Sprint 4 requirement defined hale-to-taro.
-- **Month formula is `((state.turn - 1) % 12) + 1`** -- v2 End Turn handler
-  pre-increments `state.turn` before calling `processTick`. P3 formula is wrong for v2.
-- **SEASON_LABEL at module scope** -- consistent with TERRAIN_TO_FRAME, TERRAIN_TO_TINT,
-  BUILDING_TINT pattern. Required for updateHUD() to reference without parameter passing.
-- **Population growth deferred** -- only starvation (decrease) implemented. Growth
-  mechanic undefined, deferred post-capstone.
+- **Sprint 5 = tech unlocks + populationCap fix** -- Carpentry (build 3 hale Eureka,
+  immediate), Masonry (ike >= 3, at End Turn). New `src/game/techs.js`. populationCap
+  initialized to 5 in gameState.js.
+- **checkTechUnlocks(state) returns new tech array** -- GameScene.js calls it after
+  placeBuilding() AND after processTick(). Feedback: success.ogg + #rejection-reason fade.
+- **Population growth deferred post-capstone** -- only starvation (decrease) is in game.
+- **Masonry threshold = 3 ike (placeholder)** -- depends on unresolved ike collection
+  cadence decision (annual current vs quarterly future).
 
 ---
 
-## Open Questions (Sprint 5 Discuss)
+## Open Design Questions (deferred)
 
 - Population growth trigger: when/how does pop grow toward popCap?
-- Carpentry Eureka trigger location: processTick vs placement handler?
-- `Pop 5 / 0` display oddity at game start (popCap=0 until first hale placed) -- low
-  priority, log for cleanup sprint.
+- Quarterly ike collection cadence: 1 ike per 3 turns (4/year) vs current 1/year
+- Resource collection mechanic: turn-based passive vs player-directed (Warcraft model)
+- Village/event tech grants: map objects granting techs (future mechanic)
 
 ---
 
 ## Pending Human Actions
 
-- `git push origin master` -- 13 commits from sprint-4 are unpushed (non-blocking)
-- Run `/gsd-extract-learnings sprint-4` -- capture design decisions before they're lost
+- `git push origin master` -- 14 commits from sprint-4 + sprint-5 context are unpushed (non-blocking)
 
 ---
 
 ## Session Continuity
 
 Last session: 2026-05-29
-Stopped at: Sprint 4 LEARNINGS extracted (7 decisions, 4 lessons, 5 patterns, 3 surprises).
-Next: /gsd-discuss-phase sprint-5
-Resume file: .planning/HANDOFF.json (one-shot artifact -- delete after reading)
+Stopped at: Sprint 5 context gathered -- all 4 areas discussed, CONTEXT.md written.
+Resume file: .planning/phases/sprint-5/sprint-5-CONTEXT.md
 Stale checkpoint: .planning/phases/sprint-3/.continue-here.md (sprint-3 is complete; ignore)
