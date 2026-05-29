@@ -4,3 +4,7 @@ dist/
 *.local
 .playwright-mcp/
 .vite/
+
+# GSD ephemeral artifacts
+.planning/phases/**/*-DISCUSS-CHECKPOINT.json
+.planning/HANDOFF.json
