@@ -129,7 +129,7 @@ export default class GameScene extends Phaser.Scene {
     // Selector panel wiring.
     document.getElementById('btn-type-hale').addEventListener('click', () => {
       this.selectedType = 'hale';
-      this.selectedTier = Math.min(this.selectedTier, 2);
+      selectHighestAvailableTier(this);
       updateSelector(this);
     });
     document.getElementById('btn-type-loi').addEventListener('click', () => {
@@ -202,11 +202,13 @@ export default class GameScene extends Phaser.Scene {
       if (state.techs.includes('carpentry')) {
         state.techs = state.techs.filter(t => t !== 'carpentry');
         refreshAllBuildingVisuals(this);
+        selectHighestAvailableTier(this);
         updateSelector(this);
       } else {
         state.techs.push('carpentry');
         showUnlockMessage('carpentry');
         refreshAllBuildingVisuals(this);
+        selectHighestAvailableTier(this);
         flashNewTierButtons(['carpentry']);
         updateSelector(this);
       }
@@ -216,11 +218,13 @@ export default class GameScene extends Phaser.Scene {
       if (state.techs.includes('masonry')) {
         state.techs = state.techs.filter(t => t !== 'masonry');
         refreshAllBuildingVisuals(this);
+        selectHighestAvailableTier(this);
         updateSelector(this);
       } else {
         state.techs.push('masonry');
         showUnlockMessage('masonry');
         refreshAllBuildingVisuals(this);
+        selectHighestAvailableTier(this);
         flashNewTierButtons(['masonry']);
         updateSelector(this);
       }
@@ -243,14 +247,16 @@ export default class GameScene extends Phaser.Scene {
         // not the tech-bonus visual tier. refreshAllBuildingVisuals (called on
         // unlock below) upgrades previously-placed buildings via getVisualTier.
         if (placed) applyBuildingVisual(col, row, placed, this, placed.tier);
-        updateHUD(); // after checkTechUnlocks so hud-techs row reflects any new unlock
+        const newTechs = checkTechUnlocks(state);
         if (newTechs.length > 0) {
+          selectHighestAvailableTier(this);
           if (this.cache.audio.exists('success')) this.sound.play('success');
           showUnlockMessage(newTechs[0]);
           refreshAllBuildingVisuals(this);
           updateSelector(this);
           flashNewTierButtons(newTechs);
         }
+        updateHUD();
       } else {
         const img = this.tileImages[`${col},${row}`];
         if (img) {
@@ -287,13 +293,14 @@ export default class GameScene extends Phaser.Scene {
       state.turn++;
       processTick(state, state.tiles);
       const newTechs = checkTechUnlocks(state);
-      updateHUD(); // after checkTechUnlocks so hud-techs row reflects any new unlock
       if (newTechs.length > 0) {
+        selectHighestAvailableTier(this);
         if (this.cache.audio.exists('success')) this.sound.play('success');
         showUnlockMessage(newTechs[0]);
         refreshAllBuildingVisuals(this);
         flashNewTierButtons(newTechs);
       }
+      updateHUD();
       updateSelector(this);
     });
 
@@ -346,14 +353,17 @@ function updateSelector(scene) {
       // loi and loko-ia have only one tier -- disable T2 and T3 for these types
       btn.style.opacity       = '0.4';
       btn.style.pointerEvents = 'none';
-    } else if (scene.selectedType === 'hale' && i === 1 && !state.techs.includes('carpentry')) {
-      // hale T2 requires Carpentry tech
-      btn.style.opacity       = '0.4';
-      btn.style.pointerEvents = 'none';
-    } else if (scene.selectedType === 'hale' && i === 2 && !state.techs.includes('masonry')) {
-      // hale T3 requires Masonry tech
-      btn.style.opacity       = '0.4';
-      btn.style.pointerEvents = 'none';
+    } else if (scene.selectedType === 'hale') {
+      // Only the highest unlocked tier is available. Lower tiers are locked
+      // once a higher tier unlocks (Carpentry -> T2 only; Masonry -> T3 only).
+      const maxTier = state.techs.includes('masonry') ? 2 : state.techs.includes('carpentry') ? 1 : 0;
+      if (i !== maxTier) {
+        btn.style.opacity       = '0.4';
+        btn.style.pointerEvents = 'none';
+      } else {
+        btn.style.opacity       = '1';
+        btn.style.pointerEvents = 'auto';
+      }
     } else {
       btn.style.opacity       = '1';
       btn.style.pointerEvents = 'auto';
@@ -476,4 +486,12 @@ function updateDevMode() {
   const masonBtn = document.getElementById('dev-masonry');
   if (carpBtn) carpBtn.textContent = state.techs.includes('carpentry') ? 'Remove Carpentry' : 'Force Carpentry';
   if (masonBtn) masonBtn.textContent = state.techs.includes('masonry') ? 'Remove Masonry' : 'Force Masonry';
+}
+
+// Sets scene.selectedTier to the highest currently-unlocked tier for hale.
+// Call before updateSelector() whenever state.techs changes so the selection
+// auto-advances to the new highest tier (lower tiers are then dimmed/locked).
+function selectHighestAvailableTier(scene) {
+  if (scene.selectedType !== 'hale') return;
+  scene.selectedTier = state.techs.includes('masonry') ? 2 : state.techs.includes('carpentry') ? 1 : 0;
 }
