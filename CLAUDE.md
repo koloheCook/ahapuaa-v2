@@ -12,7 +12,7 @@ Water is the primary carrier of value. This is a Phaser 4 rebuild of a working
 Vanilla JS prototype. Primary build going forward (ahupuaa-game Phaser 3 prototype
 paused 2026-05-25 -- see that repo's README for context).
 
-**Last shipped:** Sprint 5 context captured - tech unlock system (Carpentry Eureka + Masonry threshold + populationCap fix); sprint-5-CONTEXT.md written (2026-05-29)
+**Last shipped:** Sprint 5 complete - Carpentry + Masonry tech unlocks, populationCap fix, DevMode panel, visual tier upgrade system; all 9 QA checks passed (2026-05-30)
 
 ---
 
