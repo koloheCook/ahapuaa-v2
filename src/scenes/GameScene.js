@@ -288,10 +288,19 @@ function updateSelector(scene) {
       btn.style.background  = '#3a2a10';
     }
     if (i > 0 && SINGLE_TIER_TYPES.has(scene.selectedType)) {
-      btn.style.opacity      = '0.4';
+      // loi and loko-ia have only one tier -- disable T2 and T3 for these types
+      btn.style.opacity       = '0.4';
+      btn.style.pointerEvents = 'none';
+    } else if (scene.selectedType === 'hale' && i === 1 && !state.techs.includes('carpentry')) {
+      // hale T2 requires Carpentry tech
+      btn.style.opacity       = '0.4';
+      btn.style.pointerEvents = 'none';
+    } else if (scene.selectedType === 'hale' && i === 2 && !state.techs.includes('masonry')) {
+      // hale T3 requires Masonry tech
+      btn.style.opacity       = '0.4';
       btn.style.pointerEvents = 'none';
     } else {
-      btn.style.opacity      = '1';
+      btn.style.opacity       = '1';
       btn.style.pointerEvents = 'auto';
     }
   }
@@ -321,4 +330,40 @@ function friendlyReason(reason) {
     }
   }
   return reason;
+}
+
+// Displays a tech unlock notification in the #rejection-reason element using the same
+// 3s opacity fade-out pattern as placement rejection messages (D-10).
+function showUnlockMessage(techName) {
+  const messages = {
+    carpentry: 'Carpentry unlocked!',
+    masonry: 'Masonry unlocked!',
+  };
+  const msg = messages[techName] ?? `${techName} unlocked!`;
+  const rrEl = document.getElementById('rejection-reason');
+  rrEl.textContent = msg;
+  rrEl.style.transition = 'none';
+  rrEl.style.opacity = '1';
+  requestAnimationFrame(() => {
+    rrEl.style.transition = 'opacity 3s';
+    rrEl.style.opacity = '0';
+  });
+}
+
+// Briefly highlights the newly-enabled tier button(s) for ~500ms after an unlock (D-12).
+// Runs AFTER updateSelector has re-rendered buttons so the button is already enabled.
+// Tech-to-button mapping: carpentry -> btn-tier-1, masonry -> btn-tier-2.
+function flashNewTierButtons(newTechs) {
+  const techToTierIndex = { carpentry: 1, masonry: 2 };
+  for (const tech of newTechs) {
+    const tierIdx = techToTierIndex[tech];
+    if (tierIdx === undefined) continue;
+    const btn = document.getElementById(`btn-tier-${tierIdx}`);
+    if (!btn) continue;
+    const prevBg = btn.style.background;
+    btn.style.background = 'rgba(160,120,50,0.9)';
+    setTimeout(() => {
+      btn.style.background = prevBg;
+    }, 500);
+  }
 }
