@@ -199,7 +199,11 @@ export default class GameScene extends Phaser.Scene {
     document.getElementById('dev-fish').addEventListener('click', () => { state.resources.fish += 10; updateHUD(); });
     document.getElementById('dev-ike').addEventListener('click', () => { state.resources.ike += 5; updateHUD(); });
     document.getElementById('dev-carpentry').addEventListener('click', () => {
-      if (!state.techs.includes('carpentry')) {
+      if (state.techs.includes('carpentry')) {
+        state.techs = state.techs.filter(t => t !== 'carpentry');
+        refreshAllBuildingVisuals(this);
+        updateSelector(this);
+      } else {
         state.techs.push('carpentry');
         showUnlockMessage('carpentry');
         refreshAllBuildingVisuals(this);
@@ -209,7 +213,11 @@ export default class GameScene extends Phaser.Scene {
       updateHUD();
     });
     document.getElementById('dev-masonry').addEventListener('click', () => {
-      if (!state.techs.includes('masonry')) {
+      if (state.techs.includes('masonry')) {
+        state.techs = state.techs.filter(t => t !== 'masonry');
+        refreshAllBuildingVisuals(this);
+        updateSelector(this);
+      } else {
         state.techs.push('masonry');
         showUnlockMessage('masonry');
         refreshAllBuildingVisuals(this);
@@ -231,9 +239,11 @@ export default class GameScene extends Phaser.Scene {
       if (placement.ok) {
         placeBuilding(tile, this.selectedType, this.selectedTier, state);
         const placed = state.buildings[tile.buildingId];
-        if (placed) applyBuildingVisual(col, row, placed, this);
-        updateHUD();
-        const newTechs = checkTechUnlocks(state); // helpers defined below at module scope
+        // Pass placed.tier so a newly-placed building shows its actual tier,
+        // not the tech-bonus visual tier. refreshAllBuildingVisuals (called on
+        // unlock below) upgrades previously-placed buildings via getVisualTier.
+        if (placed) applyBuildingVisual(col, row, placed, this, placed.tier);
+        updateHUD(); // after checkTechUnlocks so hud-techs row reflects any new unlock
         if (newTechs.length > 0) {
           if (this.cache.audio.exists('success')) this.sound.play('success');
           showUnlockMessage(newTechs[0]);
@@ -276,8 +286,8 @@ export default class GameScene extends Phaser.Scene {
     document.getElementById('end-turn').addEventListener('click', () => {
       state.turn++;
       processTick(state, state.tiles);
-      updateHUD();
-      const newTechs = checkTechUnlocks(state); // helpers defined below at module scope
+      const newTechs = checkTechUnlocks(state);
+      updateHUD(); // after checkTechUnlocks so hud-techs row reflects any new unlock
       if (newTechs.length > 0) {
         if (this.cache.audio.exists('success')) this.sound.play('success');
         showUnlockMessage(newTechs[0]);
@@ -306,6 +316,7 @@ function updateHUD() {
   document.getElementById('hud-season').textContent = isWet ? SEASON_LABEL.wet : SEASON_LABEL.dry;
   document.getElementById('hud-ike').textContent    = state.resources.ike;
   document.getElementById('hud-techs').textContent  = state.techs.length > 0 ? state.techs.join(', ') : 'none';
+  updateDevMode();
 }
 
 function updateSelector(scene) {
@@ -423,10 +434,13 @@ function getVisualTier(building, techs) {
 
 // Applies tint and tier label for a placed building based on its current visual tier.
 // Called on placement and after tech unlock to propagate visual upgrades.
-function applyBuildingVisual(col, row, building, scene) {
+// overrideVisualTier: pass building.tier on fresh placement so the building
+// shows its actual tier, not the tech-bonus tier. Omit (or pass undefined)
+// when upgrading existing buildings via refreshAllBuildingVisuals.
+function applyBuildingVisual(col, row, building, scene, overrideVisualTier) {
   const img = scene.tileImages[`${col},${row}`];
   if (!img) return;
-  const vTier = getVisualTier(building, state.techs);
+  const vTier = overrideVisualTier !== undefined ? overrideVisualTier : getVisualTier(building, state.techs);
   const tints = BUILDING_TIER_TINT[building.type] ?? [0xffd700, 0xb38600, 0x7a5c00];
   img.setTint(tints[vTier] ?? tints[0]);
   const key = `${col},${row}`;
@@ -453,4 +467,13 @@ function refreshAllBuildingVisuals(scene) {
   for (const building of Object.values(state.buildings)) {
     applyBuildingVisual(building.col, building.row, building, scene);
   }
+}
+
+// Updates DevMode button labels to reflect current tech state (toggle behavior).
+// Called from updateHUD() so labels stay in sync whenever state.techs changes.
+function updateDevMode() {
+  const carpBtn = document.getElementById('dev-carpentry');
+  const masonBtn = document.getElementById('dev-masonry');
+  if (carpBtn) carpBtn.textContent = state.techs.includes('carpentry') ? 'Remove Carpentry' : 'Force Carpentry';
+  if (masonBtn) masonBtn.textContent = state.techs.includes('masonry') ? 'Remove Masonry' : 'Force Masonry';
 }
