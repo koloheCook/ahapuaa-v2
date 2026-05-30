@@ -1,0 +1,62 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-05-30T21:54:02Z",
+  "phase": "sprint-5",
+  "phase_name": "Tech Unlock System",
+  "phase_dir": ".planning/phases/sprint-5",
+  "plan": 2,
+  "task": 3,
+  "total_tasks": 3,
+  "status": "complete",
+  "completed_tasks": [
+    {"id": "01-1", "name": "Create src/game/techs.js with checkTechUnlocks(state)", "status": "done", "commit": "98c4458"},
+    {"id": "01-2", "name": "Fix populationCap initialization to 5 in gameState.js", "status": "done", "commit": "827b60b"},
+    {"id": "02-1", "name": "Import checkTechUnlocks and wire 2 call sites in GameScene.js", "status": "done", "commit": "23387c7"},
+    {"id": "02-2", "name": "Add showUnlockMessage, flashNewTierButtons, extend updateSelector", "status": "done", "commit": "053f6f9"},
+    {"id": "02-3", "name": "Human verify checkpoint -- passed 9/9 checks", "status": "done", "commit": "ce57551"}
+  ],
+  "remaining_tasks": [],
+  "blockers": [],
+  "human_actions_pending": [
+    {
+      "action": "git push origin master",
+      "context": "Sprint-5 commits (and earlier) are unpushed -- non-blocking but should be done before demo",
+      "blocking": false
+    },
+    {
+      "action": "Remove DevMode panel before public demo",
+      "context": "DevMode panel (G key toggle in index.html + GameScene.js) is a test utility. Must be removed before any public or demo build. Currently hidden by default but the code is present.",
+      "blocking": false
+    }
+  ],
+  "decisions": [
+    {
+      "decision": "Highest-tier-only selector for hale",
+      "rationale": "After Carpentry: T1 dims, T2 auto-selects. After Masonry: T1+T2 dim, T3 auto-selects. Lower tiers are never simultaneously available with higher tiers.",
+      "phase": "sprint-5"
+    },
+    {
+      "decision": "Visual tier: existing buildings upgrade, new placements show selected tier",
+      "rationale": "applyBuildingVisual accepts overrideVisualTier; pass building.tier on fresh placement so player sees what they paid for. refreshAllBuildingVisuals (called on unlock) uses getVisualTier to upgrade pre-existing buildings.",
+      "phase": "sprint-5"
+    },
+    {
+      "decision": "DevMode panel as first-class testing tool",
+      "rationale": "G key toggles panel with resource injection and tech force/remove toggles. Built during QA to unblock Masonry testing (can't reach ike>=3 in normal play quickly).",
+      "phase": "sprint-5"
+    },
+    {
+      "decision": "Testing workflow (seed states + agent audit) deferred",
+      "rationale": "User requested deferral -- test infrastructure is Sprint 6+ scope, not Sprint 6 necessarily.",
+      "phase": "sprint-5"
+    },
+    {
+      "decision": "Masonry threshold 3 ike is a placeholder",
+      "rationale": "Calibrated to current annual ike model (1/year). Needs revision when quarterly ike cadence (4/year) is implemented.",
+      "phase": "sprint-5"
+    }
+  ],
+  "uncommitted_files": [],
+  "next_action": "Sprint 6 planning. Define game feature scope (what comes after tech unlocks -- resource collection, population growth, Makahiki loop, or another feature). Testing workflow infrastructure is deferred but captured.",
+  "context_notes": "Sprint 5 is fully complete and verified. All commits are on master. The project is at a clean stopping point between sprints. No in-flight work."
+}
