@@ -27,6 +27,13 @@ const TERRAIN_TO_TINT = {
 };
 
 const BUILDING_TINT = { hale: 0xffd700, loi: 0x00ffcc, 'loko-ia': 0x4488ff };
+// Tints per visual tier (0=T1, 1=T2, 2=T3). hale darkens with each tech unlock.
+// loi/loko-ia are single-tier -- tint stays constant.
+const BUILDING_TIER_TINT = {
+  hale:      [0xffd700, 0xb38600, 0x7a5c00],
+  loi:       [0x00ffcc, 0x00ffcc, 0x00ffcc],
+  'loko-ia': [0x4488ff, 0x4488ff, 0x4488ff],
+};
 const SINGLE_TIER_TYPES = new Set(['loi', 'loko-ia']);
 const SEASON_LABEL = { wet: 'Hoʻoilo', dry: 'Kauwela' };
 
@@ -66,6 +73,7 @@ export default class GameScene extends Phaser.Scene {
     state.tiles = tiles;
     this.map = map;
     this.tileImages = {};
+    this.buildingLabels = {};
 
     // 5. Stamp each tile: position from map.tileToWorldXY, sprite from atlas, tint where applicable.
     let stamped = 0;
@@ -189,13 +197,14 @@ export default class GameScene extends Phaser.Scene {
       const placement = canPlace(tile, this.selectedType, this.selectedTier, state);
       if (placement.ok) {
         placeBuilding(tile, this.selectedType, this.selectedTier, state);
-        const img = this.tileImages[`${col},${row}`];
-        if (img) img.setTint(BUILDING_TINT[this.selectedType] ?? 0xffd700);
+        const placed = state.buildings[tile.buildingId];
+        if (placed) applyBuildingVisual(col, row, placed, this);
         updateHUD();
         const newTechs = checkTechUnlocks(state); // helpers defined below at module scope
         if (newTechs.length > 0) {
-          this.sound.play('success');
+          if (this.cache.audio.exists('success')) this.sound.play('success');
           showUnlockMessage(newTechs[0]);
+          refreshAllBuildingVisuals(this);
           updateSelector(this);
           flashNewTierButtons(newTechs);
         }
@@ -206,7 +215,7 @@ export default class GameScene extends Phaser.Scene {
           this.time.delayedCall(300, () => {
             const building = tile.buildingId ? state.buildings[tile.buildingId] : null;
             if (building) {
-              img.setTint(BUILDING_TINT[building.type] ?? 0xffd700);
+              applyBuildingVisual(col, row, building, this);
             } else {
               const origTint = TERRAIN_TO_TINT[tile.terrainType];
               if (origTint !== undefined) {
@@ -237,8 +246,9 @@ export default class GameScene extends Phaser.Scene {
       updateHUD();
       const newTechs = checkTechUnlocks(state); // helpers defined below at module scope
       if (newTechs.length > 0) {
-        this.sound.play('success');
+        if (this.cache.audio.exists('success')) this.sound.play('success');
         showUnlockMessage(newTechs[0]);
+        refreshAllBuildingVisuals(this);
         flashNewTierButtons(newTechs);
       }
       updateSelector(this);
@@ -365,5 +375,48 @@ function flashNewTierButtons(newTechs) {
     setTimeout(() => {
       btn.style.background = prevBg;
     }, 500);
+  }
+}
+
+// Returns the visual tier for a building given current tech state.
+// Hale upgrades 1 visual tier per hale-relevant tech unlocked (carpentry, masonry).
+// loi/loko-ia are single-tier -- no visual upgrade.
+function getVisualTier(building, techs) {
+  if (building.type !== 'hale') return building.tier;
+  const bonus = techs.filter(t => t === 'carpentry' || t === 'masonry').length;
+  return Math.min(building.tier + bonus, 2);
+}
+
+// Applies tint and tier label for a placed building based on its current visual tier.
+// Called on placement and after tech unlock to propagate visual upgrades.
+function applyBuildingVisual(col, row, building, scene) {
+  const img = scene.tileImages[`${col},${row}`];
+  if (!img) return;
+  const vTier = getVisualTier(building, state.techs);
+  const tints = BUILDING_TIER_TINT[building.type] ?? [0xffd700, 0xb38600, 0x7a5c00];
+  img.setTint(tints[vTier] ?? tints[0]);
+  const key = `${col},${row}`;
+  if (scene.buildingLabels[key]) {
+    scene.buildingLabels[key].destroy();
+    delete scene.buildingLabels[key];
+  }
+  if (vTier > 0) {
+    const { x, y } = scene.map.tileToWorldXY(col, row);
+    const label = scene.add.text(x, y, String(vTier + 1), {
+      fontSize: '16px',
+      fontStyle: 'bold',
+      color: '#ffffff',
+      stroke: '#000000',
+      strokeThickness: 3,
+    }).setOrigin(0.5, 0.5).setDepth(10);
+    scene.buildingLabels[key] = label;
+  }
+}
+
+// Re-renders all placed buildings after a tech unlock so existing structures
+// reflect the new visual tier (darker tint + tier number overlay).
+function refreshAllBuildingVisuals(scene) {
+  for (const building of Object.values(state.buildings)) {
+    applyBuildingVisual(building.col, building.row, building, scene);
   }
 }
