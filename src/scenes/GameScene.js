@@ -5,6 +5,7 @@ import { buildWorld } from '../game/worldGen.js';
 import { state } from '../game/gameState.js';
 import { canPlace, placeBuilding } from '../game/buildings.js';
 import { processTick } from '../game/resourceTick.js';
+import { checkTechUnlocks } from '../game/techs.js';
 
 // Atlas frame mapping per CLAUDE.md "Terrain frame -> game terrain mapping".
 // Tints are programmatic placeholders for ocean/stream/forest (no native water/forest sprite).
@@ -191,6 +192,13 @@ export default class GameScene extends Phaser.Scene {
         const img = this.tileImages[`${col},${row}`];
         if (img) img.setTint(BUILDING_TINT[this.selectedType] ?? 0xffd700);
         updateHUD();
+        const newTechs = checkTechUnlocks(state); // helpers defined below at module scope
+        if (newTechs.length > 0) {
+          this.sound.play('success');
+          showUnlockMessage(newTechs[0]);
+          updateSelector(this);
+          flashNewTierButtons(newTechs);
+        }
       } else {
         const img = this.tileImages[`${col},${row}`];
         if (img) {
@@ -227,6 +235,12 @@ export default class GameScene extends Phaser.Scene {
       state.turn++;
       processTick(state, state.tiles);
       updateHUD();
+      const newTechs = checkTechUnlocks(state); // helpers defined below at module scope
+      if (newTechs.length > 0) {
+        this.sound.play('success');
+        showUnlockMessage(newTechs[0]);
+        flashNewTierButtons(newTechs);
+      }
       updateSelector(this);
     });
 
