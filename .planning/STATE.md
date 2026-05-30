@@ -6,14 +6,14 @@
 ahupuaʻa from mountain to sea, balancing taro, fish, wood, stone, population, and ʻike
 through seasonal cycles and traditional buildings.
 
-**Current focus:** Sprint 5 context captured. Ready for /gsd-plan-phase sprint-5.
+**Current focus:** Sprint 5 planned (2 plans, 2 waves). Ready for /gsd-execute-phase sprint-5.
 
 ---
 
 ## Current Position
 
 - **Sprint:** 5 of ~7 (estimated)
-- **Status:** Context gathered -- ready to plan
+- **Status:** Planned -- ready to execute
 - **Last completed:** sprint-4 (dual-clock + ike HUD wired, verified 7/7)
 - **Progress:** [████████░░] ~65%
 
@@ -50,6 +50,6 @@ through seasonal cycles and traditional buildings.
 ## Session Continuity
 
 Last session: 2026-05-29
-Stopped at: Sprint 5 context gathered -- all 4 areas discussed, CONTEXT.md written.
+Stopped at: Sprint 5 plans written (sprint-5-01, sprint-5-02). Execute next.
 Resume file: .planning/phases/sprint-5/sprint-5-CONTEXT.md
 Stale checkpoint: .planning/phases/sprint-3/.continue-here.md (sprint-3 is complete; ignore)
