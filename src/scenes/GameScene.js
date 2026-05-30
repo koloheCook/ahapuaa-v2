@@ -186,6 +186,39 @@ export default class GameScene extends Phaser.Scene {
       }
     });
 
+    // G key: toggle DevMode panel.
+    this.input.keyboard.on('keydown-G', () => {
+      const panel = document.getElementById('devmode-panel');
+      panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+    });
+
+    // DevMode resource injection buttons.
+    document.getElementById('dev-wood').addEventListener('click', () => { state.resources.wood += 10; updateHUD(); });
+    document.getElementById('dev-stone').addEventListener('click', () => { state.resources.stone += 10; updateHUD(); });
+    document.getElementById('dev-taro').addEventListener('click', () => { state.resources.taro += 10; updateHUD(); });
+    document.getElementById('dev-fish').addEventListener('click', () => { state.resources.fish += 10; updateHUD(); });
+    document.getElementById('dev-ike').addEventListener('click', () => { state.resources.ike += 5; updateHUD(); });
+    document.getElementById('dev-carpentry').addEventListener('click', () => {
+      if (!state.techs.includes('carpentry')) {
+        state.techs.push('carpentry');
+        showUnlockMessage('carpentry');
+        refreshAllBuildingVisuals(this);
+        flashNewTierButtons(['carpentry']);
+        updateSelector(this);
+      }
+      updateHUD();
+    });
+    document.getElementById('dev-masonry').addEventListener('click', () => {
+      if (!state.techs.includes('masonry')) {
+        state.techs.push('masonry');
+        showUnlockMessage('masonry');
+        refreshAllBuildingVisuals(this);
+        flashNewTierButtons(['masonry']);
+        updateSelector(this);
+      }
+      updateHUD();
+    });
+
     this.input.on('pointerdown', (pointer) => {
       if (pointer.rightButtonDown()) return;
       const worldPoint = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
@@ -272,6 +305,7 @@ function updateHUD() {
   document.getElementById('hud-month').textContent  = state.month;
   document.getElementById('hud-season').textContent = isWet ? SEASON_LABEL.wet : SEASON_LABEL.dry;
   document.getElementById('hud-ike').textContent    = state.resources.ike;
+  document.getElementById('hud-techs').textContent  = state.techs.length > 0 ? state.techs.join(', ') : 'none';
 }
 
 function updateSelector(scene) {

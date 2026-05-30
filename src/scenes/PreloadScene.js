@@ -25,6 +25,12 @@ export default class PreloadScene extends Phaser.Scene {
     // Tiled hex tilemap JSON.
     this.load.tilemapTiledJSON('ahupuaa-map', 'maps/ahupuaa.json');
 
+    // Audio (canonical keys from CLAUDE.md "Asset Keys").
+    this.load.audio('click',   'assets/audio/click1.ogg');
+    this.load.audio('success', 'assets/audio/success.ogg');
+    this.load.audio('alert',   'assets/audio/alert.ogg');
+    this.load.audio('ambient', 'assets/audio/forest-ambience.mp3');
+
     // Surface load errors loudly during Sprint 1 verification.
     this.load.on('loaderror', (file) => {
       console.error('[Preload] load error:', file.key, file.src);
