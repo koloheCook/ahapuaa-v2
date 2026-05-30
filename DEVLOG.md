@@ -1,5 +1,63 @@
 # DEVLOG - Ahupuaa v2 (Phaser 4 Rebuild)
 
+## 2026-05-30 - Sprint 5 complete (Sonnet 4.6)
+
+### What was built
+
+Sprint 5 goal: Carpentry + Masonry tech unlocks, populationCap fix. Delivered.
+
+**src/game/techs.js (new):** `checkTechUnlocks(state)` -- Systems-layer file (zero Phaser
+imports). Carpentry: haleCount >= 3. Masonry: ike >= 3. Returns array of newly-unlocked
+tech strings, mutates state.techs[] directly. Idempotent via `!includes` guards.
+
+**src/game/gameState.js:** populationCap: 0 -> 5. HUD now shows Pop 5 / 5 at game start.
+
+**src/scenes/GameScene.js (wiring + QA fixes):**
+- `checkTechUnlocks(state)` called at 2 sites: after placeBuilding() (Carpentry Eureka,
+  immediate) and after processTick() (Masonry threshold, End Turn)
+- Unlock feedback: success.ogg + "Carpentry/Masonry unlocked!" fade in #rejection-reason
+- `BUILDING_TIER_TINT` per-tier tints for hale (gold/dark gold/amber)
+- `getVisualTier` + `applyBuildingVisual` + `refreshAllBuildingVisuals`: existing hale
+  upgrade visually (darker tint + tier number) on unlock; newly placed hale show selected tier
+- `selectHighestAvailableTier(scene)`: auto-advances selectedTier before updateSelector;
+  lower tiers dim on unlock (T1 dims when Carpentry fires; T1+T2 dim when Masonry fires)
+- `updateSelector` revised: only highest unlocked tier enabled for hale at any time
+- Persistent `Techs:` row in HUD (replaces reliance on fade-only feedback)
+- DevMode panel (G key): +10 wood/stone/taro/fish, +5 ike, Force/Remove Carpentry+Masonry
+
+**src/scenes/PreloadScene.js:** Added 4 missing `this.load.audio()` calls (success.ogg
+and 3 others were never loaded -- silent failure guarded by cache.audio.exists check).
+
+**index.html:** DevMode panel HTML + .dev-btn CSS + hud-techs span.
+
+### Bugs found and fixed during QA
+
+- Audio never loaded (PreloadScene missing audio calls)
+- checkTechUnlocks removed from placement handler by bad edit (fired at End Turn only)
+- updateHUD called before checkTechUnlocks (Techs: row showed stale state)
+- Newly placed buildings showed tech-bonus tier instead of selected tier
+
+### Decisions made
+
+- Highest-tier-only selector (user feedback: lower tiers should dim after unlock)
+- Visual tier = placed tier on new buildings; existing buildings get tech bonus visually
+- DevMode as first-class testing tool; captured "seed-state + audit" workflow as Sprint 6
+- Masonry threshold 3 ike remains placeholder (deferred with ike cadence design question)
+
+### Open questions
+
+- Testing workflow: how to preload specific game states for QA (seed states + audit)
+- Population growth trigger (post-capstone)
+- Quarterly ike collection cadence (1/quarter = 4/year)
+- Resource collection mechanic: turn-based vs player-directed
+
+### Next session goal
+
+Sprint 6 planning. Propose scope: testing workflow (seed-state loader + agent QA audit)
+as first item; discuss next game feature (sprint 6 game content).
+
+---
+
 ## 2026-05-29 - Sprint 5 context captured (Sonnet 4.6)
 
 ### What was done
